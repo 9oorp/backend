@@ -3,8 +3,6 @@ package com.goorp.backend.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goorp.backend.dto.MemberJoinDto;
 import com.goorp.backend.dto.MemberLoginDto;
-import com.goorp.backend.exception.AppException;
-import com.goorp.backend.exception.ErrorCode;
 import com.goorp.backend.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,10 +59,6 @@ class MemberControllerTest {
         String password = "hello1";
         String passwordConfirm = "hello1";
 
-        when(memberService.join(any(),any(),any(),any()))
-                .thenThrow(new AppException(ErrorCode.MEMBER_NAME_DUPLICATED, ""));
-
-
         mockMvc.perform(post("/api/members/join")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -81,9 +75,6 @@ class MemberControllerTest {
         String name = "hello";
         String password = "hello1";
         String passwordConfirm = "hello2";
-
-        when(memberService.join(any(),any(),any(),any()))
-                .thenThrow(new AppException(ErrorCode.PASSWORD_NOT_CONFIRM, ""));
 
         mockMvc.perform(post("/api/members/join")
                         .with(csrf())
@@ -118,9 +109,6 @@ class MemberControllerTest {
         String memberId = "aaaa";
         String password = "hello1";
 
-        when(memberService.login(any(),any()))
-                .thenThrow(new AppException(ErrorCode.MEMBER_NAME_NOT_FOUNT, ""));
-
         mockMvc.perform(post("/api/members/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
@@ -135,9 +123,6 @@ class MemberControllerTest {
     void login_fail2() throws Exception {
         String memberId = "123";
         String password = "hello1";
-
-        when(memberService.login(any(),any()))
-                .thenThrow(new AppException(ErrorCode.PASSWORD_NOT_CONFIRM, ""));
 
         mockMvc.perform(post("/api/members/login")
                         .with(csrf())
