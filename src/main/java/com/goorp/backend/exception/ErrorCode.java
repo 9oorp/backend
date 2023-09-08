@@ -9,11 +9,10 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @Getter
 public enum ErrorCode {
-    MEMBER_NAME_DUPLICATED(HttpStatus.CONFLICT, ""),
-    MEMBER_NAME_NOT_FOUNT(HttpStatus.NOT_FOUND, ""),
-    PASSWORD_NOT_CONFIRM(HttpStatus.CONFLICT, ""),
+    ID_DUPLICATED(HttpStatus.CONFLICT, ""),
+    ID_NOT_FOUNT(HttpStatus.NOT_FOUND, ""),
+    PASSWORD_NOT_SAME(HttpStatus.UNAUTHORIZED, ""),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "");
-
     private HttpStatus httpStatus;
     private String message;
 }
