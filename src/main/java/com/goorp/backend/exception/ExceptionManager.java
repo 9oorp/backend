@@ -1,21 +1,31 @@
 package com.goorp.backend.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.goorp.backend.dto.ApiErrorResponseDto;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class ExceptionManager {
-    @ExceptionHandler(AppException.class)
-    public ResponseEntity<?> appExceptionHandler(AppException e) {
-        return ResponseEntity.status(e.getErrorCode().getHttpStatus())
-                .body(e.getErrorCode().name() + " " + e.getMessage());
+
+    @ExceptionHandler
+    public ApiErrorResponseDto runtimeExceptionHandler(MemberException e) {
+        return ApiErrorResponseDto.builder()
+                .ok(false)
+                .errorMessage(e.getMessage())
+                .build();
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(e.getMessage());
+    @ExceptionHandler
+    public ApiErrorResponseDto processValidationError(MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        String firstErrorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();
+        return  ApiErrorResponseDto.builder()
+                .ok(false)
+                .errorMessage(firstErrorMessage)
+                .build();
     }
 }
