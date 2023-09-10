@@ -14,8 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -90,9 +88,6 @@ class MemberControllerTest {
     void login_success() throws Exception {
         String memberId = "123";
         String password = "1234";
-
-        when(memberService.login(any(),any()))
-                .thenReturn("token");
 
         mockMvc.perform(post("/api/members/login")
                         .with(csrf())

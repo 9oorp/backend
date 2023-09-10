@@ -8,5 +8,5 @@ import java.util.Map;
 @Getter
 public class ApiResponseDto {
     boolean ok;
-    Map<String, String> data;
+    Map<String, ?> data;
 }
