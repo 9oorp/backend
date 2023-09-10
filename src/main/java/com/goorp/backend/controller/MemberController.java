@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -32,12 +31,10 @@ public class MemberController {
     }
     @PostMapping("/login")
     public ApiResponseDto login(@Validated @RequestBody MemberLoginDto dto) {
-        String token = memberService.login(dto.getMemberId(), dto.getPassword());
-        HashMap<String, String> map = new HashMap<>();
-        map.put("token", token);
+        Map<String, String> tokens = memberService.login(dto.getMemberId(), dto.getPassword());
         return ApiResponseDto.builder()
                 .ok(true)
-                .data(Map.of("token", token))
+                .data(Map.of("accessToken", tokens.get("accessToken"), "refreshToken", tokens.get("refreshToken")))
                 .build();
     }
 }
