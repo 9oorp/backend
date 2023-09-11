@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class MemberService {
     private Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
     private Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
 
+    @Transactional
     public String join(String memberId, String password, String passwordConfirm, String name) {
         // memberId 중복 체크
         memberRepository.findByMemberId(memberId)
@@ -52,6 +54,7 @@ public class MemberService {
         return "SUCCESS";
     }
 
+    @Transactional(readOnly = true)
     public Map<String, String> login(String memberId, String password) {
         // memberId 없음
         Member findMember = memberRepository.findByMemberId(memberId)
