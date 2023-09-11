@@ -1,7 +1,5 @@
 package com.goorp.backend.configuration;
 
-import com.goorp.backend.service.MemberService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +12,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-    private final MemberService memberService;
 
     @Value(value = "${jwt.secret}")
     private String secretKey;
@@ -36,7 +32,8 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt 사용하는 경우 사용
                 .and()
-                .addFilterBefore(new JwtFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(),UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtFilter(secretKey), JwtExceptionFilter.class)
                 .build();
     }
 }

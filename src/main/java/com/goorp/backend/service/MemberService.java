@@ -10,8 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @Service
@@ -22,8 +25,10 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
     @Value(value = "${jwt.secret}")
     private String key;
-    private Long expireTimeMs = 1000 * 60 * 60L;
+    private Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
+    private Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
 
+    @Transactional
     public String join(String memberId, String password, String passwordConfirm, String name) {
         // memberId 중복 체크
         memberRepository.findByMemberId(memberId)
@@ -49,7 +54,8 @@ public class MemberService {
         return "SUCCESS";
     }
 
-    public String login(String memberId, String password) {
+    @Transactional(readOnly = true)
+    public Map<String, String> login(String memberId, String password) {
         // memberId 없음
         Member findMember = memberRepository.findByMemberId(memberId)
                 .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, memberId + " 가 없습니다."));
@@ -57,7 +63,33 @@ public class MemberService {
         if (!encoder.matches(password, findMember.getPassword())) {
             throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
         }
-        // 로그인 정상 동작
-        return JwtUtil.createToken(findMember.getMemberId(), findMember.getName(), key, expireTimeMs);
+        // 로그인 정상 동작 refresh, access 토큰 발급
+        String accessToken = JwtUtil.createAccessToken(findMember.getMemberId(), findMember.getName(), key, accessExpireTimeMs);
+        String refreshToken = JwtUtil.createRefreshToken(findMember.getMemberId(), key, refreshExpireTimeMs);
+        Map<String, String> tokens = new HashMap<>();
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
+        return tokens;
+    }
+
+    public boolean isRefreshToken(String token) {
+        if (!JwtUtil.getType(token, key).equals("refresh")) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isRefreshExpired(String token) {
+        if (JwtUtil.isExpired(token, key)) {
+            return false;
+        }
+        return true;
+    }
+
+    public String createAccessToken(String token) {
+        String memberId = JwtUtil.getMemberId(token, key);
+        Member findMember = memberRepository.findByMemberId(memberId)
+                .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, memberId + " 가 없습니다."));
+        return JwtUtil.createAccessToken(findMember.getMemberId(), findMember.getName(), key, accessExpireTimeMs);
     }
 }
