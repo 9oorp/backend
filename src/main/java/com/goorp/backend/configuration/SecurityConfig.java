@@ -32,13 +32,8 @@ public class SecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt 사용하는 경우 사용
                 .and()
-<<<<<<< Updated upstream
-                .addFilterBefore(new JwtExceptionFilter(),UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtFilter(secretKey), JwtExceptionFilter.class)
-=======
                 .addFilterBefore(new JwtFilter(secretKey),UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
->>>>>>> Stashed changes
                 .build();
     }
 }
