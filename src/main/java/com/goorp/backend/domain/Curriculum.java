@@ -27,5 +27,4 @@ public class Curriculum {
 
     @OneToMany(mappedBy = "curriculum")
     private List<Post> posts = new ArrayList<>();
-
 }

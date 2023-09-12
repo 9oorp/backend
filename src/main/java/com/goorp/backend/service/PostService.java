@@ -4,6 +4,8 @@ import com.goorp.backend.domain.Curriculum;
 import com.goorp.backend.domain.Post;
 import com.goorp.backend.dto.PostRequestDTO;
 import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.exception.ErrorCode;
+import com.goorp.backend.exception.PostException;
 import com.goorp.backend.repository.CurriculumRepository;
 import com.goorp.backend.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,12 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional(readOnly = true)
 public class PostService {
 
     private final PostRepository postRepository;
@@ -26,9 +30,11 @@ public class PostService {
     }
 
     // CREATE
+    @Transactional
     public PostResponseDTO createPost(Long curriculumId, PostRequestDTO requestDTO) {
         Curriculum curriculum = curriculumRepository.findById(curriculumId)
-                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 커리큘럼 ID 입니다"));
+//                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 커리큘럼 ID 입니다"));
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "올바르지 않은 커리큘럼 ID 입니다"));
 
         Post post = convertToEntity(requestDTO).toBuilder().curriculum(curriculum).build();
         Post savedPost = postRepository.save(post);
@@ -53,6 +59,7 @@ public class PostService {
     }
 
     // UPDATE
+    @Transactional
     public PostResponseDTO updatePost(Long curriculumId, Long postId, PostRequestDTO requestDTO) {
         Curriculum curriculum = curriculumRepository.findById(curriculumId)
                 .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 커리큘럼 ID 입니다"));
@@ -77,6 +84,7 @@ public class PostService {
     }
 
     // DELETE
+    @Transactional
     public void deletePost(Long curriculumId, Long postId) {
         postRepository.findByCurriculumIdAndId(curriculumId, postId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 id의 게시글을 찾을 수 없습니다."));
