@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Date;
 
 @Builder(toBuilder = true)
 @Getter
@@ -35,8 +34,7 @@ public class Post {
     @Column(nullable = false)
     private LocalDate updatedAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRICULUM_ID")
     private Curriculum curriculum;
-
 }
