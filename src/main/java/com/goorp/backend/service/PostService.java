@@ -79,6 +79,7 @@ public class PostService {
                 .content(requestDTO.getContent())
                 .classification(requestDTO.getClassification())
                 .subject(requestDTO.getSubject())
+                .stack(requestDTO.getStack())
                 .recruitNum(requestDTO.getRecruitNum())
                 .contactUrl(requestDTO.getContactUrl())
                 .status(requestDTO.getStatus())
@@ -108,6 +109,7 @@ public class PostService {
                 post.getContent(),
                 post.getClassification(),
                 post.getSubject(),
+                post.getStack(),
                 post.getRecruitNum(),
                 post.getContactUrl(),
                 post.getStatus(),
@@ -124,6 +126,7 @@ public class PostService {
                 .content(requestDTO.getContent())
                 .classification(requestDTO.getClassification())
                 .subject(requestDTO.getSubject())
+                .stack(requestDTO.getStack())
                 .recruitNum(requestDTO.getRecruitNum())
                 .contactUrl(requestDTO.getContactUrl())
                 .status(requestDTO.getStatus())

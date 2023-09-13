@@ -16,6 +16,7 @@ public class PostResponseDTO {
     private String content;
     private String classification;
     private String subject;
+    private String stack;
     private int recruitNum;
     private String contactUrl;
     private String status;

@@ -25,6 +25,8 @@ public class Post {
     @Column(nullable = false)
     private String subject;
     @Column(nullable = false)
+    private String stack;
+    @Column(nullable = false)
     private int recruitNum;
     private String contactUrl;
     @Column(nullable = false)
