@@ -17,4 +17,5 @@ public class PostRequestDTO {
     private String contactUrl;
     private String status;
     private Long curriculumId;
+    private Long memberId;
 }

@@ -22,4 +22,5 @@ public class PostResponseDTO {
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private String curriculumName;
+    private String memberName;
 }
