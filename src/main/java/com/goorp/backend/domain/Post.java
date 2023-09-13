@@ -25,6 +25,8 @@ public class Post {
     @Column(nullable = false)
     private String subject;
     @Column(nullable = false)
+    private String stack;
+    @Column(nullable = false)
     private int recruitNum;
     private String contactUrl;
     @Column(nullable = false)
@@ -37,4 +39,8 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRICULUM_ID")
     private Curriculum curriculum;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 }

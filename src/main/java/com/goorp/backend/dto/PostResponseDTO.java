@@ -16,10 +16,12 @@ public class PostResponseDTO {
     private String content;
     private String classification;
     private String subject;
+    private String stack;
     private int recruitNum;
     private String contactUrl;
     private String status;
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private String curriculumName;
+    private String memberName;
 }

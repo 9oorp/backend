@@ -1,15 +1,14 @@
 package com.goorp.backend.controller;
 
+import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.PostRequestDTO;
-import com.goorp.backend.dto.PostResponseDTO;
 import com.goorp.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/curriculum/{curriculumId}")
+@RequestMapping("/api")
 public class PostController {
 
     private final PostService postService;
@@ -20,38 +19,50 @@ public class PostController {
 
     // CREATE
     @PostMapping("/posts")
-    public ResponseEntity<PostResponseDTO> createPost(@PathVariable Long curriculumId, @RequestBody PostRequestDTO requestDTO) {
-        PostResponseDTO post = postService.createPost(curriculumId, requestDTO);
-        return ResponseEntity.ok(post);
+    public ApiResponseDto createPost(@RequestBody PostRequestDTO requestDTO, @RequestParam Long curriculumId, @RequestParam Long memberId) {
+        postService.createPost(requestDTO, curriculumId, memberId);
+        return ApiResponseDto.builder()
+                .ok(true)
+                .data(Map.of("message", "post 생성 성공"))
+                .build();
     }
 
     // READ
-    // 페이지 넘버는 추후에
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<PostResponseDTO> getPostByCurriculumAndId(@PathVariable Long curriculumId, @PathVariable Long postId) {
-        PostResponseDTO post = postService.findPostByCurriculumAndId(curriculumId, postId);
-        return ResponseEntity.ok(post);
+    public ApiResponseDto getPostById(@PathVariable Long postId) {
+        postService.findPostById(postId);
+        return ApiResponseDto.builder()
+                .ok(true)
+                .data(Map.of("message", "단일 post 조회 성공"))
+                .build();
     }
 
     // READ
     // 페이지 넘버는 추후에
-    @GetMapping("/posts")
-    public ResponseEntity<List<PostResponseDTO>> getAllPostsByCurriculum(@PathVariable Long curriculumId) {
-        List<PostResponseDTO> posts = postService.findAllPostsByCurriculum(curriculumId);
-        return ResponseEntity.ok(posts);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<PostResponseDTO>> getAllPostsByCurriculum(@RequestParam Long curriculumId) {
+//        List<PostResponseDTO> posts = postService.findAllPostsByCurriculum(curriculumId);
+//        return ResponseEntity.ok(posts);
+//    }
 
     // UPDATE
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<PostResponseDTO> updatePost(@PathVariable Long curriculumId, @PathVariable Long postId, @RequestBody PostRequestDTO requestDTO) {
-        PostResponseDTO updatedPost = postService.updatePost(curriculumId, postId, requestDTO);
-        return ResponseEntity.ok(updatedPost);
+    public ApiResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO, @RequestParam Long curriculumId, @RequestParam Long memberId) {
+        postService.updatePost(postId, requestDTO, curriculumId, memberId);
+        return ApiResponseDto.builder()
+                .ok(true)
+                .data(Map.of("message", "post 업데이트 성공"))
+                .build();
     }
 
     // DELETE
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long curriculumId, @PathVariable Long postId) {
-        postService.deletePost(curriculumId, postId);
-        return ResponseEntity.noContent().build();
+    public ApiResponseDto deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return ApiResponseDto.builder()
+                .ok(true)
+                .data(Map.of("message", "post 삭제 성공"))
+                .build();
+//        return ResponseEntity.noContent().build();
     }
 }
