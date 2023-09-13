@@ -15,10 +15,11 @@ import java.time.LocalDate;
 @Entity
 public class Member {
     @Id
+    @Column(name = "MEMBER_ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false, length = 20)
-    private String memberId;
+    private String accountId;
     @Column(nullable = false, length = 60)
     private String password;
     @Column(nullable = false, length = 20)

@@ -13,9 +13,10 @@ public class JwtUtil {
                 .getBody().get("memberName",String.class);
     }
 
-    public static String getMemberId(String token, String secretKey) {
+
+    public static String getAccountId(String token, String secretKey) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().get("memberId", String.class);
+                .getBody().get("accountId", String.class);
     }
 
     public static String getType(String token, String secretKey) {
@@ -35,9 +36,10 @@ public class JwtUtil {
         }
     }
 
-    public static String createAccessToken(String memberId, String memberName, String key, long expireTimeMs) {
-        Claims claims = Jwts.claims(); // 일종의 map
-        claims.put("memberId", memberId);
+
+    public static String createAccessToken(String accountId, String memberName, String key, long expireTimeMs) {
+        Claims claims = Jwts.claims();
+        claims.put("accountId", accountId);
         claims.put("memberName", memberName);
         claims.put("type", "access");
 
@@ -49,9 +51,10 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static String createRefreshToken(String memberId, String key, long expireTimeMs) {
-        Claims claims = Jwts.claims(); // 일종의 map
-        claims.put("memberId", memberId);
+
+    public static String createRefreshToken(String accountId, String key, long expireTimeMs) {
+        Claims claims = Jwts.claims();
+        claims.put("accountId", accountId);
         claims.put("type", "refresh");
 
         return Jwts.builder()
