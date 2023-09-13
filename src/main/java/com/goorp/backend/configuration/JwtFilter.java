@@ -50,11 +50,12 @@ public class JwtFilter extends OncePerRequestFilter {
             // 토큰 검증이 필요한 요청에서만 사용자 인증 정보 설정
             if (isProtectedPath) {
                 // memberId 토큰에서 꺼내기
-                String memberId = JwtUtil.getMemberId(token, secretKey);
+
+                String accountId = JwtUtil.getAccountId(token, secretKey);
                 String memberName = JwtUtil.getMemberName(token, secretKey);
 
                 // 권한 부여
-                MemberDetails memberDetails = new MemberDetails(memberId, memberName);
+                MemberDetails memberDetails = new MemberDetails(accountId, memberName);
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(memberDetails, null, List.of(new SimpleGrantedAuthority("MEMBER")));
                 // Detail 설정

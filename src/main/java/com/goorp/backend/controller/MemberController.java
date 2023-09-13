@@ -23,7 +23,8 @@ public class MemberController {
 
     @PostMapping("/join")
     public ApiResponseDto join(@Validated @RequestBody MemberJoinDto dto) {
-        memberService.join(dto.getMemberId(), dto.getPassword(), dto.getPasswordConfirm(), dto.getMemberName());
+
+        memberService.join(dto.getAccountId(), dto.getPassword(), dto.getPasswordConfirm(), dto.getMemberName());
         return ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("message", "회원가입 성공"))
@@ -31,7 +32,7 @@ public class MemberController {
     }
     @PostMapping("/login")
     public ApiResponseDto login(@Validated @RequestBody MemberLoginDto dto) {
-        Map<String, String> tokens = memberService.login(dto.getMemberId(), dto.getPassword());
+        Map<String, String> tokens = memberService.login(dto.getAccountId(), dto.getPassword());
         return ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("accessToken", tokens.get("accessToken"), "refreshToken", tokens.get("refreshToken")))

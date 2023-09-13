@@ -15,10 +15,10 @@ public class AuthenticationTestController {
     public String test(Authentication authentication) {
         if (authentication.getPrincipal() instanceof MemberDetails) {
             MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
-            String memberId = memberDetails.getMemberId();
+            String accountId = memberDetails.getAccountId();
             String memberName = memberDetails.getMemberName();
-            log.info("memberId = {},memberName = {} ",memberId, memberName);
-            return memberName + " (" + memberId + ") 인증되었습니다.";
+            log.info("accountId = {},memberName = {} ",accountId, memberName);
+            return memberName + " (" + accountId + ") 인증되었습니다.";
         }
         return "인증되지 않은 사용자 입니다.";
     }

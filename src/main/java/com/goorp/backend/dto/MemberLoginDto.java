@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 public class MemberLoginDto {
     @NotBlank(message = "{NotBlank.memberId}")
-    private String memberId;
+    private String accountId;
     @NotBlank(message = "{NotBlank.password}")
     private String password;
 }

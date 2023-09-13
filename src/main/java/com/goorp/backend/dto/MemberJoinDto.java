@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 public class MemberJoinDto {
     @Size(min = 5, max = 20, message = "{Size.memberId}")
-    private String memberId;
+    private String accountId;
     @Size(min = 5, max = 20, message = "{Size.memberName}")
     private String memberName;
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d).+$", message = "{Pattern.password}")  // 영어, 숫자 포함
