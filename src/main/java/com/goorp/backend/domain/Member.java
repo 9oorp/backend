@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
@@ -24,10 +26,13 @@ public class Member {
     private String password;
     @Column(nullable = false, length = 20)
     private String name;
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Integer> posts = new ArrayList<>();
+
     @Column(nullable = false)
     private LocalDate createdAt;
     @Column(nullable = false)
     private LocalDate updatedAt;
+
+//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "member")
+    private List<Post> posts = new ArrayList<>();
 }

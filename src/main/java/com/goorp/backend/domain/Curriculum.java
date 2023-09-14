@@ -26,5 +26,6 @@ public class Curriculum {
     private LocalDate updatedAt;
 
     @OneToMany(mappedBy = "curriculum")
+    @Builder.Default
     private List<Post> posts = new ArrayList<>();
 }
