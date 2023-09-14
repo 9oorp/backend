@@ -1,7 +1,9 @@
 package com.goorp.backend.controller;
 
+import com.goorp.backend.domain.Post;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.PostRequestDTO;
+import com.goorp.backend.dto.PostResponseDTO;
 import com.goorp.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,10 +32,11 @@ public class PostController {
     // READ
     @GetMapping("/posts/{postId}")
     public ApiResponseDto getPostById(@PathVariable Long postId) {
-        postService.findPostById(postId);
+        Post postById = postService.findPostById(postId);
+        PostResponseDTO postResponseDTO = postService.PostToResponseDTO(postById);
         return ApiResponseDto.builder()
                 .ok(true)
-                .data(Map.of("message", "단일 post 조회 성공"))
+                .data(Map.of("message", "단일 post 조회 성공", "post", postResponseDTO))
                 .build();
     }
 
@@ -63,6 +66,5 @@ public class PostController {
                 .ok(true)
                 .data(Map.of("message", "post 삭제 성공"))
                 .build();
-//        return ResponseEntity.noContent().build();
     }
 }

@@ -50,10 +50,11 @@ public class PostService {
     }
 
     // READ
-    public void findPostById(Long postId) {
+    public Post findPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
         convertToResponseDTO(post);
+        return post;
     }
 
 //    // READ
