@@ -22,18 +22,17 @@ public class PostController {
     // CREATE
     @PostMapping("/posts")
     public ApiResponseDto createPost(@RequestBody PostRequestDTO requestDTO, @RequestParam Long curriculumId, @RequestParam Long memberId) {
-        postService.createPost(requestDTO, curriculumId, memberId);
+        PostResponseDTO responseDTO = postService.createPost(requestDTO, curriculumId, memberId);
         return ApiResponseDto.builder()
                 .ok(true)
-                .data(Map.of("message", "post 생성 성공"))
+                .data(Map.of("message", "post 생성 성공", "post", responseDTO))
                 .build();
     }
 
     // READ
     @GetMapping("/posts/{postId}")
     public ApiResponseDto getPostById(@PathVariable Long postId) {
-        Post postById = postService.findPostById(postId);
-        PostResponseDTO postResponseDTO = postService.PostToResponseDTO(postById);
+        PostResponseDTO postResponseDTO = postService.findPostById(postId);
         return ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("message", "단일 post 조회 성공", "post", postResponseDTO))
@@ -51,10 +50,10 @@ public class PostController {
     // UPDATE
     @PutMapping("/posts/{postId}")
     public ApiResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO, @RequestParam Long curriculumId, @RequestParam Long memberId) {
-        postService.updatePost(postId, requestDTO, curriculumId, memberId);
+        PostResponseDTO postResponseDTO = postService.updatePost(postId, requestDTO, curriculumId, memberId);
         return ApiResponseDto.builder()
                 .ok(true)
-                .data(Map.of("message", "post 업데이트 성공"))
+                .data(Map.of("message", "post 업데이트 성공", "post", postResponseDTO))
                 .build();
     }
 

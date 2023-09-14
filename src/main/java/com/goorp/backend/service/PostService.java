@@ -33,7 +33,7 @@ public class PostService {
 
     // CREATE
     @Transactional
-    public void createPost(PostRequestDTO requestDTO, Long curriculumId, Long memberId) {
+    public PostResponseDTO createPost(PostRequestDTO requestDTO, Long curriculumId, Long memberId) {
         Curriculum curriculum = curriculumRepository.findById(curriculumId)
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, curriculumId + " 가 없습니다."));
 
@@ -46,15 +46,14 @@ public class PostService {
                 .build();
 
         Post savedPost = postRepository.save(post);
-        convertToResponseDTO(savedPost);
+        return convertToResponseDTO(savedPost);
     }
 
     // READ
-    public Post findPostById(Long postId) {
+    public PostResponseDTO findPostById(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
-        convertToResponseDTO(post);
-        return post;
+        return convertToResponseDTO(post);
     }
 
 //    // READ
@@ -65,7 +64,7 @@ public class PostService {
 
     // UPDATE
     @Transactional
-    public void updatePost(Long postId, PostRequestDTO requestDTO, Long curriculumId, Long memberId) {
+    public PostResponseDTO updatePost(Long postId, PostRequestDTO requestDTO, Long curriculumId, Long memberId) {
         Post existingPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
 
@@ -90,7 +89,7 @@ public class PostService {
                 .build();
 
         postRepository.save(updatedPost);
-        convertToResponseDTO(updatedPost);
+        return convertToResponseDTO(updatedPost);
     }
 
     // DELETE
@@ -101,10 +100,10 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-    private void convertToResponseDTO(Post post) {
-        if (post == null) return;
+    private PostResponseDTO convertToResponseDTO(Post post) {
+        if (post == null) return null;
 
-        new PostResponseDTO(
+        return new PostResponseDTO(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
@@ -134,24 +133,5 @@ public class PostService {
                 .createdAt(LocalDate.now())
                 .updatedAt(LocalDate.now())
                 .build();
-    }
-
-    public PostResponseDTO PostToResponseDTO(Post post) {
-
-        return new PostResponseDTO(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getClassification(),
-                post.getSubject(),
-                post.getStack(),
-                post.getRecruitNum(),
-                post.getContactUrl(),
-                post.getStatus(),
-                post.getCreatedAt(),
-                post.getUpdatedAt(),
-                post.getCurriculum().getName(),
-                post.getMember().getName()
-        );
     }
 }
