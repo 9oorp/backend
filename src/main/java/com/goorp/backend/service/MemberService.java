@@ -55,17 +55,17 @@ public class MemberService {
     }
 
     @Transactional(readOnly = true)
-    public Map<String, String> login(String memberId, String password) {
+    public Map<String, String> login(String accountId, String password) {
         // memberId 없음
-        Member findMember = memberRepository.findByAccountId(memberId)
+        Member findAccount = memberRepository.findByAccountId(accountId)
                 .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, "ID가 틀립니다."));
         // password 틀림
-        if (!encoder.matches(password, findMember.getPassword())) {
+        if (!encoder.matches(password, findAccount.getPassword())) {
             throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
-        String accessToken = JwtUtil.createAccessToken(findMember.getAccountId(), findMember.getName(), key, accessExpireTimeMs);
-        String refreshToken = JwtUtil.createRefreshToken(findMember.getAccountId(), key, refreshExpireTimeMs);
+        String accessToken = JwtUtil.createAccessToken(findAccount.getAccountId(), findAccount.getName(), key, accessExpireTimeMs);
+        String refreshToken = JwtUtil.createRefreshToken(findAccount.getAccountId(), key, refreshExpireTimeMs);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken);
