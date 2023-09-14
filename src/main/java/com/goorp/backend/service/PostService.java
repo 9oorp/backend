@@ -134,4 +134,23 @@ public class PostService {
                 .updatedAt(LocalDate.now())
                 .build();
     }
+
+    public PostResponseDTO PostToResponseDTO(Post post) {
+
+        return new PostResponseDTO(
+                post.getId(),
+                post.getTitle(),
+                post.getContent(),
+                post.getClassification(),
+                post.getSubject(),
+                post.getStack(),
+                post.getRecruitNum(),
+                post.getContactUrl(),
+                post.getStatus(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
+                post.getCurriculum().getName(),
+                post.getMember().getName()
+        );
+    }
 }
