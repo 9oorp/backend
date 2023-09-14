@@ -100,7 +100,7 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-    private PostResponseDTO convertToResponseDTO(Post post) {
+    public PostResponseDTO convertToResponseDTO(Post post) {
         if (post == null) return null;
 
         return new PostResponseDTO(

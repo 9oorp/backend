@@ -50,7 +50,7 @@ public class MemberController {
         PageRequest pageRequest = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<Post> findAllPost = postRepository.findByMember_AccountId(accountId, pageRequest).getContent();
         List<PostResponseDTO> posts = findAllPost.stream()
-                .map(postService::PostToResponseDTO)
+                .map(postService::convertToResponseDTO)
                 .toList();
 
         return ApiResponseDto.builder()
