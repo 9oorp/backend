@@ -43,8 +43,8 @@ public class PostController {
     }
 
     // READ
-    @GetMapping
-    public ResponseEntity<ApiResponseDto> getAllPostsByCurriculum(@RequestParam Long curriculumId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+    @GetMapping("/curriculum/{curriculumId}/posts")
+    public ResponseEntity<ApiResponseDto> getAllPostsByCurriculum(@PathVariable Long curriculumId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
         List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId, page, size);
         return ResponseEntity.ok(
                 ApiResponseDto.builder()
