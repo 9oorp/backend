@@ -6,7 +6,10 @@ import com.goorp.backend.dto.PostRequestDTO;
 import com.goorp.backend.dto.PostResponseDTO;
 import com.goorp.backend.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -40,12 +43,17 @@ public class PostController {
     }
 
     // READ
-    // 페이지 넘버는 추후에
-//    @GetMapping
-//    public ResponseEntity<List<PostResponseDTO>> getAllPostsByCurriculum(@RequestParam Long curriculumId) {
-//        List<PostResponseDTO> posts = postService.findAllPostsByCurriculum(curriculumId);
-//        return ResponseEntity.ok(posts);
-//    }
+    @GetMapping
+    public ResponseEntity<ApiResponseDto> getAllPostsByCurriculum(@RequestParam Long curriculumId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
+        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId, page, size);
+        return ResponseEntity.ok(
+                ApiResponseDto.builder()
+                        .ok(true)
+                        .data(Map.of("message", "포스트 목록 조회 성공", "posts", postResponseDTO))
+                        .build()
+        );
+    }
+
 
     // UPDATE
     @PutMapping("/posts/{postId}")

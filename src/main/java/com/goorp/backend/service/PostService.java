@@ -11,9 +11,14 @@ import com.goorp.backend.repository.CurriculumRepository;
 import com.goorp.backend.repository.MemberRepository;
 import com.goorp.backend.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,11 +61,12 @@ public class PostService {
         return convertToResponseDTO(post);
     }
 
-//    // READ
-//    public List<PostResponseDTO> findAllPostsByCurriculum(Long curriculumId) {
-//        List<Post> posts = postRepository.findByCurriculumId(curriculumId);
-//        return posts.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
-//    }
+    // READ
+    public List<PostResponseDTO> findAllPostsByCurriculum(Long curriculumId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> posts = postRepository.findByCurriculumId(curriculumId, pageable);
+        return posts.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+    }
 
     // UPDATE
     @Transactional
