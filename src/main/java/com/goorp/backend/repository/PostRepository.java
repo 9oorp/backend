@@ -18,7 +18,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findByCurriculumIdAndId(Long curriculumId, Long postId);
 
-    List<Post> findByCurriculumId(Long curriculumId);
+    Page<Post> findByCurriculumId(Long curriculumId, Pageable pageable);
 
     @Transactional(readOnly = true)
     @EntityGraph(attributePaths = {"curriculum", "member"})
