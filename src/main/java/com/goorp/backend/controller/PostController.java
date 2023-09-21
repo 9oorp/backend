@@ -24,8 +24,8 @@ public class PostController {
 
     // CREATE
     @PostMapping("/posts")
-    public ApiResponseDto createPost(@RequestBody PostRequestDTO requestDTO, @RequestParam Long curriculumId, @RequestParam Long memberId) {
-        PostResponseDTO responseDTO = postService.createPost(requestDTO, curriculumId, memberId);
+    public ApiResponseDto createPost(@RequestBody PostRequestDTO requestDTO) {
+        PostResponseDTO responseDTO = postService.createPost(requestDTO);
         return ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("message", "post 생성 성공", "post", responseDTO))
@@ -53,7 +53,6 @@ public class PostController {
                         .build()
         );
     }
-
 
     // UPDATE
     @PutMapping("/posts/{postId}")

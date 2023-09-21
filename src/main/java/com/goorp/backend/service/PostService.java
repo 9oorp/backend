@@ -38,12 +38,12 @@ public class PostService {
 
     // CREATE
     @Transactional
-    public PostResponseDTO createPost(PostRequestDTO requestDTO, Long curriculumId, Long memberId) {
-        Curriculum curriculum = curriculumRepository.findById(curriculumId)
-                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, curriculumId + " 가 없습니다."));
+    public PostResponseDTO createPost(PostRequestDTO requestDTO) {
+        Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT,   " curriculum 이 없습니다."));
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, memberId + " 가 없습니다."));
+        Member member = memberRepository.findById(requestDTO.getMemberId())
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT,   " memberId 가 없습니다."));
 
         Post post = convertToEntity(requestDTO).toBuilder()
                 .curriculum(curriculum)
