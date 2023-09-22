@@ -7,6 +7,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -15,8 +17,8 @@ public class PostResponseDTO {
     private String title;
     private String content;
     private String classification;
-    private String subject;
-    private String stack;
+    private List<String> subject;
+    private List<String> stack;
     private int recruitNum;
     private String contactUrl;
     private String status;
@@ -24,4 +26,5 @@ public class PostResponseDTO {
     private LocalDate updatedAt;
     private String curriculumName;
     private String memberName;
+    private String accountId;
 }

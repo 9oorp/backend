@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -114,15 +116,16 @@ public class PostService {
                 post.getTitle(),
                 post.getContent(),
                 post.getClassification(),
-                post.getSubject(),
-                post.getStack(),
+                Collections.singletonList(post.getSubject()),
+                Collections.singletonList(post.getStack()),
                 post.getRecruitNum(),
                 post.getContactUrl(),
                 post.getStatus(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 post.getCurriculum().getName(),
-                post.getMember().getName()
+                post.getMember().getName(),
+                post.getMember().getAccountId()
         );
     }
 
