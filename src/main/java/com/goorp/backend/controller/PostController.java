@@ -56,8 +56,8 @@ public class PostController {
 
     // UPDATE
     @PutMapping("/posts/{postId}")
-    public ApiResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO, @RequestParam Long curriculumId, @RequestParam Long memberId) {
-        PostResponseDTO postResponseDTO = postService.updatePost(postId, requestDTO, curriculumId, memberId);
+    public ApiResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO) {
+        PostResponseDTO postResponseDTO = postService.updatePost(postId, requestDTO);
         return ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("message", "post 업데이트 성공", "post", postResponseDTO))

@@ -72,15 +72,15 @@ public class PostService {
 
     // UPDATE
     @Transactional
-    public PostResponseDTO updatePost(Long postId, PostRequestDTO requestDTO, Long curriculumId, Long memberId) {
+    public PostResponseDTO updatePost(Long postId, PostRequestDTO requestDTO) {
         Post existingPost = postRepository.findById(postId)
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
 
-        Curriculum curriculum = curriculumRepository.findById(curriculumId)
-                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, curriculumId + " 가 없습니다."));
+        Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "curriculumId 가 없습니다."));
 
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, memberId + " 가 없습니다."));
+        Member member = memberRepository.findById(requestDTO.getMemberId())
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "memberId 가 없습니다."));
 
         Post updatedPost = existingPost.toBuilder()
                 .title(requestDTO.getTitle())
