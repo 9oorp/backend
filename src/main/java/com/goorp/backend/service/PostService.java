@@ -111,13 +111,21 @@ public class PostService {
     public PostResponseDTO convertToResponseDTO(Post post) {
         if (post == null) return null;
 
+        List<String> subjectList = Arrays.stream(post.getSubject().split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
+        List<String> stackList = Arrays.stream(post.getStack().split(","))
+                .map(String::trim)
+                .collect(Collectors.toList());
+
         return new PostResponseDTO(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getClassification(),
-                Collections.singletonList(post.getSubject()),
-                Collections.singletonList(post.getStack()),
+                subjectList,
+                stackList,
                 post.getRecruitNum(),
                 post.getContactUrl(),
                 post.getStatus(),
