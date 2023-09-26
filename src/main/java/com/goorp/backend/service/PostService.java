@@ -111,13 +111,16 @@ public class PostService {
     public PostResponseDTO convertToResponseDTO(Post post) {
         if (post == null) return null;
 
+        List<String> subjectList = Arrays.asList(post.getSubject().split(","));
+        List<String> stackList = Arrays.asList(post.getStack().split(","));
+
         return new PostResponseDTO(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 post.getClassification(),
-                Collections.singletonList(post.getSubject()),
-                Collections.singletonList(post.getStack()),
+                subjectList,
+                stackList,
                 post.getRecruitNum(),
                 post.getContactUrl(),
                 post.getStatus(),
