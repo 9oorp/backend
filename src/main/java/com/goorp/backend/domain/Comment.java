@@ -1,51 +1,42 @@
 package com.goorp.backend.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-@Builder(toBuilder = true)
+@Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Post {
-
+public class Comment {
     @Id
-    @Column(name = "POST_ID")
+    @Column(name = "COMMENT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private String title;
-    @Column(nullable = false)
     private String content;
     @Column(nullable = false)
-    private String classification;
+    private int group;
     @Column(nullable = false)
-    private String subject;
+    private int groupCnt;
     @Column(nullable = false)
-    private String stack;
-    @Column(nullable = false)
-    private int recruitNum;
-    private String contactUrl;
-    @Column(nullable = false)
-    private String status;
+    private int depth;
     @Column(nullable = false)
     private LocalDate createdAt;
     @Column(nullable = false)
     private LocalDate updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CURRICULUM_ID")
-    private Curriculum curriculum;
+    @JoinColumn(name = "POST_ID")
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    @OneToMany(mappedBy = "post")
-    private List<Comment> comments = new ArrayList<>();
 }
