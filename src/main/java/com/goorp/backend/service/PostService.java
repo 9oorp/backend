@@ -10,15 +10,17 @@ import com.goorp.backend.exception.PostException;
 import com.goorp.backend.repository.CurriculumRepository;
 import com.goorp.backend.repository.MemberRepository;
 import com.goorp.backend.repository.PostRepository;
+import com.goorp.backend.repository.PostSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +33,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final CurriculumRepository curriculumRepository;
     private final MemberRepository memberRepository;
+
     @Autowired
     public PostService(PostRepository postRepository, CurriculumRepository curriculumRepository, MemberRepository memberRepository) {
         this.postRepository = postRepository;
@@ -42,10 +45,10 @@ public class PostService {
     @Transactional
     public PostResponseDTO createPost(PostRequestDTO requestDTO) {
         Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
-                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT,   " curriculum 이 없습니다."));
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " curriculum 이 없습니다."));
 
-        Member member = memberRepository.findById(requestDTO.getMemberId())
-                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT,   " memberId 가 없습니다."));
+        Member member = memberRepository.findByAccountId(requestDTO.getAccountId())
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " memberId 가 없습니다."));
 
         Post post = convertToEntity(requestDTO).toBuilder()
                 .curriculum(curriculum)
@@ -64,10 +67,21 @@ public class PostService {
     }
 
     // READ
-    public List<PostResponseDTO> findAllPostsByCurriculum(Long curriculumId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Post> posts = postRepository.findByCurriculumId(curriculumId, pageable);
-        return posts.stream().map(this::convertToResponseDTO).collect(Collectors.toList());
+    public List<PostResponseDTO> findAllPostsByCurriculum(
+            Long curriculumId,
+            int page,
+            String classification,
+            String sort,
+            String stdsub,
+            String stack,
+            String status,
+            String search
+    ) {
+        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub, stack, status, search);
+        Pageable pageable = PageRequest.of(page, 20, Sort.by(sort));
+        Page<Post> postPage = postRepository.findAll(spec, pageable);
+        // Convert Post to PostResponseDTO
+        return postPage.getContent().stream().map(this::convertToResponseDTO).collect(Collectors.toList());
     }
 
     // UPDATE
@@ -79,7 +93,7 @@ public class PostService {
         Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "curriculumId 가 없습니다."));
 
-        Member member = memberRepository.findById(requestDTO.getMemberId())
+        Member member = memberRepository.findByAccountId(requestDTO.getAccountId())
                 .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "memberId 가 없습니다."));
 
         Post updatedPost = existingPost.toBuilder()

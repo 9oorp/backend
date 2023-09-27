@@ -1,6 +1,5 @@
 package com.goorp.backend.controller;
 
-import com.goorp.backend.domain.Post;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.PostRequestDTO;
 import com.goorp.backend.dto.PostResponseDTO;
@@ -17,6 +16,7 @@ import java.util.Map;
 public class PostController {
 
     private final PostService postService;
+
     @Autowired
     public PostController(PostService postService) {
         this.postService = postService;
@@ -43,9 +43,19 @@ public class PostController {
     }
 
     // READ
+    // todo
     @GetMapping("/curriculum/{curriculumId}/posts")
-    public ResponseEntity<ApiResponseDto> getAllPostsByCurriculum(@PathVariable Long curriculumId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "20") int size) {
-        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId, page, size);
+    public ResponseEntity<ApiResponseDto> getAllPostsByCurriculum(
+            @PathVariable Long curriculumId,
+            @RequestParam int page,
+            @RequestParam String classification,
+            @RequestParam String sort,
+            @RequestParam(required = false) String stdsub,
+            @RequestParam(required = false) String stack,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) String search
+    ) {
+        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId, page, classification, sort, stdsub, stack, status, search);
         return ResponseEntity.ok(
                 ApiResponseDto.builder()
                         .ok(true)
