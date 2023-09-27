@@ -46,7 +46,7 @@ public class CommentService {
                 .post(post)
                 .member(member)
                 .content(commentDto.getContent())
-                .group(commentDto.getGroup())
+                .commentGroup(commentDto.getGroup())
                 .groupCnt(commentDto.getGroupCnt())
                 .depth(commentDto.getDepth())
                 .createdAt(LocalDate.now())
@@ -79,7 +79,7 @@ public class CommentService {
         return new CommentDto(
                 comment.getId(),
                 comment.getContent(),
-                comment.getGroup(),
+                comment.getCommentGroup(),
                 comment.getGroupCnt(),
                 comment.getDepth(),
                 comment.getCreatedAt(),

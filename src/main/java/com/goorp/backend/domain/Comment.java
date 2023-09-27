@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Builder
@@ -21,7 +22,7 @@ public class Comment {
     @Column(nullable = false)
     private String content;
     @Column(nullable = false)
-    private int group;
+    private int commentGroup;
     @Column(nullable = false)
     private int groupCnt;
     @Column(nullable = false)

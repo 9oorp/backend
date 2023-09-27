@@ -31,9 +31,15 @@ public class JwtFilter extends OncePerRequestFilter {
         // 현재 요청 URL 가져오기
         String requestURI = request.getRequestURI();
 
+        // GET요청은 토큰 검증하지 않고 통과
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         // 토큰 검증이 필요한 URL 패턴 목록
         List<String> protectedPaths = List.of(
-                "/api/class/**/posts/**",
+                "/api/posts/**",
                 "/api/posts/**/comments/**"
         );
 
