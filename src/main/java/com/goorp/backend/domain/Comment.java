@@ -21,11 +21,11 @@ public class Comment {
     private Long id;
     @Column(nullable = false)
     private String content;
-    @Column(nullable = false)
+    @Column
     private int commentGroup;
-    @Column(nullable = false)
+    @Column
     private int groupCnt;
-    @Column(nullable = false)
+    @Column
     private int depth;
     @Column(nullable = false)
     private LocalDate createdAt;
