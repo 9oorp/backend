@@ -1,14 +1,10 @@
 package com.goorp.backend.dto;
 
-import com.goorp.backend.domain.Post;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,11 +20,9 @@ public class PostResponseDTO {
     private int recruitNum;
     private String contactUrl;
     private String status;
-    private LocalDate createdAt;
-    private LocalDate updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String curriculumName;
     private String memberName;
     private String accountId;
-
-
 }

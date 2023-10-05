@@ -1,9 +1,9 @@
 package com.goorp.backend.domain;
 
+import java.time.LocalDateTime;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +34,9 @@ public class Post {
     @Column(nullable = false)
     private String status;
     @Column(nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     @Column(nullable = false)
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CURRICULUM_ID")
@@ -48,4 +48,9 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
+
+    public void changeStatus(String newStatus) {
+        this.status = newStatus;
+    }
+
 }
