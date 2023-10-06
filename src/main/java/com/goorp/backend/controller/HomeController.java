@@ -12,7 +12,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class homeController {
+public class HomeController {
     @GetMapping("/test")
     public Map<String, Object> testHandler() {
         log.info("home");
