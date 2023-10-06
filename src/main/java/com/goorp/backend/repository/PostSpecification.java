@@ -79,6 +79,4 @@ public class PostSpecification {
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
-
-
 }

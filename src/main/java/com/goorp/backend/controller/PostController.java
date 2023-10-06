@@ -27,9 +27,9 @@ public class PostController {
     public ApiResponseDto createPost(@RequestBody PostRequestDTO requestDTO) {
         PostResponseDTO responseDTO = postService.createPost(requestDTO);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "post 생성 성공", "post", responseDTO))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "post 생성 성공", "post", responseDTO))
+            .build();
     }
 
     // READ
@@ -37,41 +37,48 @@ public class PostController {
     public ApiResponseDto getPostById(@PathVariable Long postId) {
         PostResponseDTO postResponseDTO = postService.findPostById(postId);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "단일 post 조회 성공", "post", postResponseDTO))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "단일 post 조회 성공", "post", postResponseDTO))
+            .build();
     }
 
     // READ
-    // todo
     @GetMapping("/curriculum/{curriculumId}/posts")
     public ResponseEntity<ApiResponseDto> getAllPostsByCurriculum(
-            @PathVariable Long curriculumId,
-            @RequestParam int page,
-            @RequestParam String classification,
-            @RequestParam String sort,
-            @RequestParam(required = false) String stdsub,
-            @RequestParam(required = false) String stack,
-            @RequestParam(required = false) String status,
-            @RequestParam(required = false) String search
+        @PathVariable Long curriculumId,
+        @RequestParam int page,
+        @RequestParam String classification,
+        @RequestParam String sort,
+        @RequestParam(required = false) String stdsub,
+        @RequestParam(required = false) String stack,
+        @RequestParam(required = false) String status,
+        @RequestParam(required = false) String search
     ) {
-        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId, page, classification, sort, stdsub, stack, status, search);
+        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId,
+            page, classification, sort, stdsub, stack, status, search);
+
+        long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,
+            stdsub, stack, status, search);
+
         return ResponseEntity.ok(
-                ApiResponseDto.builder()
-                        .ok(true)
-                        .data(Map.of("message", "포스트 목록 조회 성공", "posts", postResponseDTO))
-                        .build()
+            ApiResponseDto.builder()
+                .ok(true)
+                .data(Map.of("message", "포스트 목록 조회 성공",
+                    "posts", postResponseDTO,
+                    "totalCount", totalCount))
+                .build()
         );
     }
 
     // UPDATE
     @PutMapping("/posts/{postId}")
-    public ApiResponseDto updatePost(@PathVariable Long postId, @RequestBody PostRequestDTO requestDTO) {
+    public ApiResponseDto updatePost(@PathVariable Long postId,
+        @RequestBody PostRequestDTO requestDTO) {
         PostResponseDTO postResponseDTO = postService.updatePost(postId, requestDTO);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "post 업데이트 성공", "post", postResponseDTO))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "post 업데이트 성공", "post", postResponseDTO))
+            .build();
     }
 
     // DELETE
@@ -79,8 +86,8 @@ public class PostController {
     public ApiResponseDto deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "post 삭제 성공"))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "post 삭제 성공"))
+            .build();
     }
 }
