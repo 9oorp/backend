@@ -20,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -135,6 +134,18 @@ public class PostService {
         postRepository.findById(postId)
             .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
         postRepository.deleteById(postId);
+    }
+
+    public long countAllPostsByCurriculum(
+        Long curriculumId,
+        String classification,
+        String stdsub,
+        String stack,
+        String status,
+        String search
+    ) {
+        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub, stack, status, search);
+        return postRepository.count(spec);
     }
 
     public PostResponseDTO convertToResponseDTO(Post post) {
