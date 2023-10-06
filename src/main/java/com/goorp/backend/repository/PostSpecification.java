@@ -21,7 +21,7 @@ public class PostSpecification {
             List<Predicate> predicates = new ArrayList<>();
 
             // curriculumId가 0일떄는 전체조회이므로 0일때는 조건을 추가하지 않고 0이 아니면 조건을 추가한다.
-            if (curriculumId == 0) {
+            if (curriculumId == 1) {
             } else {
                 predicates.add(
                     criteriaBuilder.equal(root.get("curriculum").get("id"), curriculumId));
