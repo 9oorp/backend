@@ -38,8 +38,8 @@ public class TokenController {
         String accessToken = memberService.createAccessToken(refreshToken);
 
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("accessToken", accessToken))
-                .build();
+            .ok(true)
+            .data(Map.of("accessToken", accessToken))
+            .build();
     }
 }

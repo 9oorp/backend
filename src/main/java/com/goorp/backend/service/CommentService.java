@@ -28,7 +28,8 @@ public class CommentService {
 
 
     @Autowired
-    public CommentService(CommentRepository commentRepository, PostRepository postRepository, MemberRepository memberRepository) {
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository,
+        MemberRepository memberRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.memberRepository = memberRepository;
@@ -38,21 +39,21 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
 
         Member member = memberRepository.findByName(commentRequestDto.getMemberName())
-                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "MemberName 이 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "MemberName 이 없습니다."));
 
         Comment comment = Comment.builder()
-                .post(post)
-                .member(member)
-                .content(commentRequestDto.getContent())
-                .commentGroup(commentRequestDto.getGroup())
-                .groupCnt(commentRequestDto.getGroupCnt())
-                .depth(commentRequestDto.getDepth())
-                .createdAt(LocalDate.now())
-                .updatedAt(LocalDate.now())
-                .build();
+            .post(post)
+            .member(member)
+            .content(commentRequestDto.getContent())
+            .commentGroup(commentRequestDto.getGroup())
+            .groupCnt(commentRequestDto.getGroupCnt())
+            .depth(commentRequestDto.getDepth())
+            .createdAt(LocalDate.now())
+            .updatedAt(LocalDate.now())
+            .build();
 
         Comment savedComment = commentRepository.save(comment);
         return commentResponseDto(savedComment);
@@ -68,25 +69,27 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long postId, Long commentId) {
         postRepository.findById(postId)
-                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
         commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "commentId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "commentId 가 없습니다."));
         commentRepository.deleteById(commentId);
     }
 
-    public CommentResponseDto commentResponseDto(Comment comment){
-        if (comment==null) return null;
+    public CommentResponseDto commentResponseDto(Comment comment) {
+        if (comment == null) {
+            return null;
+        }
 
         return new CommentResponseDto(
-                comment.getId(),
-                comment.getContent(),
-                comment.getCommentGroup(),
-                comment.getGroupCnt(),
-                comment.getDepth(),
-                comment.getPost().getId(),
-                comment.getMember().getName(),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt()
+            comment.getId(),
+            comment.getContent(),
+            comment.getCommentGroup(),
+            comment.getGroupCnt(),
+            comment.getDepth(),
+            comment.getPost().getId(),
+            comment.getMember().getName(),
+            comment.getCreatedAt(),
+            comment.getUpdatedAt()
         );
     }
 

@@ -16,9 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 public class Member {
+
     @Id
     @Column(name = "MEMBER_ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, length = 20)
     private String accountId;
@@ -32,7 +33,7 @@ public class Member {
     @Column(nullable = false)
     private LocalDate updatedAt;
 
-//    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+    //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 

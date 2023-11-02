@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CommentException extends RuntimeException{
+public class CommentException extends RuntimeException {
+
     private ErrorCode errorCode;
     private String message;
 }

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Builder
@@ -15,6 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 public class Comment {
+
     @Id
     @Column(name = "COMMENT_ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

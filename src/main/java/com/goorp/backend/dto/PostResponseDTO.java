@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 public class PostResponseDTO {
+
     private Long id;
     private String title;
     private String content;

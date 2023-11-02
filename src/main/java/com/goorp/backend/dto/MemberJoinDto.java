@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @Getter
 public class MemberJoinDto {
+
     @Size(min = 5, max = 20, message = "{Size.memberId}")
     private String accountId;
     @Size(min = 5, max = 20, message = "{Size.memberName}")

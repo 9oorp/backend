@@ -10,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @Getter
 public class MemberLoginDto {
+
     @NotBlank(message = "{NotBlank.memberId}")
     private String accountId;
     @NotBlank(message = "{NotBlank.password}")
