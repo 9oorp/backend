@@ -23,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
+
     private final MemberService memberService;
     private final PostService postService;
     private final PostRepository postRepository;
@@ -30,32 +31,36 @@ public class MemberController {
     @PostMapping("/join")
     public ApiResponseDto join(@Validated @RequestBody MemberJoinDto dto) {
 
-        memberService.join(dto.getAccountId(), dto.getPassword(), dto.getPasswordConfirm(), dto.getMemberName());
+        memberService.join(dto.getAccountId(), dto.getPassword(), dto.getPasswordConfirm(),
+            dto.getMemberName());
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "회원가입 성공"))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "회원가입 성공"))
+            .build();
     }
+
     @PostMapping("/login")
     public ApiResponseDto login(@Validated @RequestBody MemberLoginDto dto) {
         Map<String, String> tokens = memberService.login(dto.getAccountId(), dto.getPassword());
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("accessToken", tokens.get("accessToken"), "refreshToken", tokens.get("refreshToken")))
-                .build();
+            .ok(true)
+            .data(Map.of("accessToken", tokens.get("accessToken"), "refreshToken",
+                tokens.get("refreshToken")))
+            .build();
     }
 
     @GetMapping("/{accountId}/posts")
     public ApiResponseDto getMemberPosts(@PathVariable String accountId) {
         PageRequest pageRequest = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "createdAt"));
-        List<Post> findAllPost = postRepository.findByMember_AccountId(accountId, pageRequest).getContent();
+        List<Post> findAllPost = postRepository.findByMember_AccountId(accountId, pageRequest)
+            .getContent();
         List<PostResponseDTO> posts = findAllPost.stream()
-                .map(postService::convertToResponseDTO)
-                .toList();
+            .map(postService::convertToResponseDTO)
+            .toList();
 
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("Posts",posts))
-                .build();
+            .ok(true)
+            .data(Map.of("Posts", posts))
+            .build();
     }
 }

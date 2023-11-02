@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
-@RequiredArgsConstructor
 
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class MemberService {
@@ -32,23 +32,24 @@ public class MemberService {
     public String join(String accountId, String password, String passwordConfirm, String name) {
         // memberId 중복 체크
         memberRepository.findByAccountId(accountId)
-                .ifPresent(member -> {
-                    throw new MemberException(ErrorCode.ID_DUPLICATED, accountId + " 이미 존재 합니다.");
-                });
+            .ifPresent(member -> {
+                throw new MemberException(ErrorCode.ID_DUPLICATED, accountId + " 이미 존재 합니다.");
+            });
         // password 확인
         if (!password.equals(passwordConfirm)) {
-            throw new MemberException(ErrorCode.PASSWORD_NOT_SAME, "passwordConfirm이 password와 다릅니다!");
+            throw new MemberException(ErrorCode.PASSWORD_NOT_SAME,
+                "passwordConfirm이 password와 다릅니다!");
         }
 
         // 저장
         LocalDate now = LocalDate.now();
         Member member = Member.builder()
-                .accountId(accountId)
-                .password(encoder.encode(password))
-                .name(name)
-                .createdAt(now)
-                .updatedAt(now)
-                .build();
+            .accountId(accountId)
+            .password(encoder.encode(password))
+            .name(name)
+            .createdAt(now)
+            .updatedAt(now)
+            .build();
 
         memberRepository.save(member);
         return "SUCCESS";
@@ -58,14 +59,16 @@ public class MemberService {
     public Map<String, String> login(String accountId, String password) {
         // memberId 없음
         Member findAccount = memberRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, "ID가 틀립니다."));
+            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, "ID가 틀립니다."));
         // password 틀림
         if (!encoder.matches(password, findAccount.getPassword())) {
             throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
-        String accessToken = JwtUtil.createAccessToken(findAccount.getAccountId(), findAccount.getName(), key, accessExpireTimeMs);
-        String refreshToken = JwtUtil.createRefreshToken(findAccount.getAccountId(), key, refreshExpireTimeMs);
+        String accessToken = JwtUtil.createAccessToken(findAccount.getAccountId(),
+            findAccount.getName(), key, accessExpireTimeMs);
+        String refreshToken = JwtUtil.createRefreshToken(findAccount.getAccountId(), key,
+            refreshExpireTimeMs);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
         tokens.put("refreshToken", refreshToken);
@@ -89,7 +92,8 @@ public class MemberService {
     public String createAccessToken(String token) {
         String accountId = JwtUtil.getAccountId(token, key);
         Member findMember = memberRepository.findByAccountId(accountId)
-                .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 가 없습니다."));
-        return JwtUtil.createAccessToken(findMember.getAccountId(), findMember.getName(), key, accessExpireTimeMs);
+            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 가 없습니다."));
+        return JwtUtil.createAccessToken(findMember.getAccountId(), findMember.getName(), key,
+            accessExpireTimeMs);
     }
 }

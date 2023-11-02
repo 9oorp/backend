@@ -16,24 +16,30 @@ public class SecurityConfig {
 
     @Value(value = "${jwt.secret}")
     private String secretKey;
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.
-                httpBasic().disable()
-                .csrf().disable()
-                .cors().and()
-                .authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST, "/api/class/**/posts","/api/posts/**/comments").authenticated()
-                .antMatchers(HttpMethod.PUT, "/api/class/**/posts/**").authenticated()
-                .antMatchers(HttpMethod.DELETE, "/api/class/**/posts/**", "/api/posts/**/comments/**").authenticated()
-                .antMatchers(HttpMethod.PATCH, "/api/class/**/posts/**").authenticated()
-                .anyRequest().permitAll()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .addFilterBefore(new JwtFilter(secretKey),UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
-                .build();
+            httpBasic().disable()
+            .csrf().disable()
+            .cors().and()
+            .authorizeHttpRequests()
+            .antMatchers("/h2-console/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/class/**/posts", "/api/posts/**/comments")
+            .authenticated()
+            .antMatchers(HttpMethod.PUT, "/api/class/**/posts/**").authenticated()
+            .antMatchers(HttpMethod.DELETE, "/api/class/**/posts/**", "/api/posts/**/comments/**")
+            .authenticated()
+            .antMatchers(HttpMethod.PATCH, "/api/class/**/posts/**").authenticated()
+            .anyRequest().permitAll()
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
+            .headers().frameOptions().disable()
+            .and()
+            .build();
     }
 }

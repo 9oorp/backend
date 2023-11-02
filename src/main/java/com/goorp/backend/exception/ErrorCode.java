@@ -14,8 +14,8 @@ public enum ErrorCode {
     PASSWORD_NOT_SAME(HttpStatus.UNAUTHORIZED, ""),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, ""),
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, ""),
-    NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND,""),
-    NOT_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"");
+    NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, ""),
+    NOT_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "");
     private HttpStatus httpStatus;
     private String message;
 }

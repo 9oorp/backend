@@ -23,12 +23,14 @@ public class CommentController {
 
     // CREATE
     @PostMapping("/{postId}/comments")
-    public ApiResponseDto createComment(@PathVariable Long postId, @RequestBody CommentRequestDto commentRequestDto) {
+    public ApiResponseDto createComment(
+        @PathVariable Long postId,
+        @RequestBody CommentRequestDto commentRequestDto) {
         CommentResponseDto savedComment = commentService.createComment(postId, commentRequestDto);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "comment 생성 성공", "comment", savedComment))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "comment 생성 성공", "comment", savedComment))
+            .build();
     }
 
     // READ
@@ -36,9 +38,9 @@ public class CommentController {
     public ApiResponseDto getAllComments(@PathVariable Long postId) {
         List<CommentResponseDto> comments = commentService.getAllComments(postId);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "comment 조회 성공", "comments", comments))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "comment 조회 성공", "comments", comments))
+            .build();
     }
 
     // DELETE
@@ -46,9 +48,9 @@ public class CommentController {
     public ApiResponseDto deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
         commentService.deleteComment(postId, commentId);
         return ApiResponseDto.builder()
-                .ok(true)
-                .data(Map.of("message", "comment 삭제 성공"))
-                .build();
+            .ok(true)
+            .data(Map.of("message", "comment 삭제 성공"))
+            .build();
     }
 
 }

@@ -23,11 +23,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
+
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     private final String secretKey;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+        FilterChain filterChain) throws ServletException, IOException {
         // 현재 요청 URL 가져오기
         String requestURI = request.getRequestURI();
 
@@ -39,12 +41,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 토큰 검증이 필요한 URL 패턴 목록
         List<String> protectedPaths = List.of(
-                "/api/posts/**",
-                "/api/posts/**/comments/**"
+            "/api/posts/**",
+            "/api/posts/**/comments/**"
         );
 
         // 현재 요청 URL이 토큰 검증이 필요한 URL 패턴 중 하나와 일치하는지 확인
-        boolean isProtectedPath = protectedPaths.stream().anyMatch(path -> antPathMatcher.match(path, requestURI));
+        boolean isProtectedPath = protectedPaths.stream()
+            .anyMatch(path -> antPathMatcher.match(path, requestURI));
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         log.info("authorization : {}", authorization);
 
@@ -63,9 +66,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 // 권한 부여
                 MemberDetails memberDetails = new MemberDetails(accountId, memberName);
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(memberDetails, null, List.of(new SimpleGrantedAuthority("MEMBER")));
+                    new UsernamePasswordAuthenticationToken(memberDetails, null,
+                        List.of(new SimpleGrantedAuthority("MEMBER")));
                 // Detail 설정
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authenticationToken.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
                 return;

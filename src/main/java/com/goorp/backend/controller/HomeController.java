@@ -13,6 +13,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class HomeController {
+
     @GetMapping("/test")
     public Map<String, Object> testHandler() {
         log.info("home");
