@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -79,15 +80,30 @@ public class JwtFilter extends OncePerRequestFilter {
                 throw new InsufficientAuthenticationException("토큰이 존재하지 않습니다.", null);
             }
             if (validateToken(token)) {
-                String accountId = jwtUtil.getAccountId(token);
-                String memberName = jwtUtil.getMemberName(token);
-                String role = jwtUtil.getRole(token);
-                RoleType roleType = RoleType.valueOf(role);
-                MemberDetails memberDetails = new MemberDetails(accountId, memberName, roleType);
+                String type = jwtUtil.getType(token);
+                MemberDetails memberDetails;
+                UsernamePasswordAuthenticationToken authentication;
+                if (type.equals("refresh")) {
+                    if (!request.getRequestURI().equals("/api/auth/refresh-token")) {
+                        throw new InsufficientAuthenticationException("access token이 아닙니다.", null);
+                    }
+                    String accountId = jwtUtil.getAccountId(token);
+                    memberDetails = new MemberDetails(accountId);
 
-                UsernamePasswordAuthenticationToken authentication =
-                    new UsernamePasswordAuthenticationToken(memberDetails, null,
-                        getAuthorities(role));
+                    authentication =
+                        new UsernamePasswordAuthenticationToken(memberDetails, null,
+                            null);
+                } else {
+                    String accountId = jwtUtil.getAccountId(token);
+                    String memberName = jwtUtil.getMemberName(token);
+                    String role = jwtUtil.getRole(token);
+                    RoleType roleType = RoleType.valueOf(role);
+                    memberDetails = new MemberDetails(accountId, memberName, roleType);
+
+                    authentication =
+                        new UsernamePasswordAuthenticationToken(memberDetails, null,
+                            getAuthorities(role));
+                }
 
                 authentication.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request));
