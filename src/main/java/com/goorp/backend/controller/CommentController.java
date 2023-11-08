@@ -52,5 +52,4 @@ public class CommentController {
             .data(Map.of("message", "comment 삭제 성공"))
             .build();
     }
-
 }

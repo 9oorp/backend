@@ -75,15 +75,7 @@ public class MemberService {
         return tokens;
     }
 
-    public boolean isRefreshToken(String token) {
-        if (!jwtUtil.getType(token).equals("refresh")) {
-            return false;
-        }
-        return true;
-    }
-
-    public String refreshToAccessToken(String token) {
-        String accountId = jwtUtil.getAccountId(token);
+    public String refreshToAccessToken(String accountId) {
         Member findMember = memberRepository.findByAccountId(accountId)
             .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 멤버가 존재하지 않습니다."));
         return jwtUtil.createAccessToken(findMember.getAccountId(), findMember.getName(),
