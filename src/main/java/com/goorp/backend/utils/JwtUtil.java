@@ -1,59 +1,70 @@
 package com.goorp.backend.utils;
 
+import com.goorp.backend.configuration.RoleType;
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import java.util.Base64;
+import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
-
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class JwtUtil {
 
-    public static String getMemberName(String token, String secretKey) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-            .getBody().get("memberName", String.class);
+    @Value("${jwt.secret}")
+    private String key;
+
+    // Base64 인코딩된 문자열을 SecretKey 객체로 변환하는 메서드
+    public SecretKey getSecretKey() {
+        byte[] decodedKey = Base64.getDecoder().decode(key);
+        return Keys.hmacShaKeyFor(decodedKey);
     }
 
 
-    public static String getAccountId(String token, String secretKey) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-            .getBody().get("accountId", String.class);
+    public String getMemberName(String token) {
+        return getClaims(token).get("memberName", String.class);
     }
 
-    public static String getType(String token, String secretKey) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-            .getBody().get("type", String.class);
+    public String getAccountId(String token) {
+        return getClaims(token).get("accountId", String.class);
     }
 
-    public static boolean isExpired(String token, String secretKey) {
-        try {
-            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
-                .getBody().getExpiration().before(new Date());
-        } catch (ExpiredJwtException e) {
-            log.error("토큰이 만료되었습니다. {}", token);
-            throw new JwtException("토큰 만료");
-        } catch (Exception e) {
-            throw new JwtException("토큰 검증 중 에러 발생");
-        }
+    public String getType(String token) {
+        return getClaims(token).get("type", String.class);
     }
 
+    public String getRole(String token) {
+        return getClaims(token).get("role", String.class);
+    }
 
-    public static String createAccessToken(String accountId, String memberName, String key,
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(getSecretKey())
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
+    }
+
+    public String createAccessToken(String accountId, String memberName, RoleType roleType,
         long expireTimeMs) {
         Claims claims = Jwts.claims();
         claims.put("accountId", accountId);
         claims.put("memberName", memberName);
+        claims.put("role", roleType.name());
         claims.put("type", "access");
 
         return Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-            .signWith(SignatureAlgorithm.HS256, key)
+            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
             .compact();
     }
 
-
-    public static String createRefreshToken(String accountId, String key, long expireTimeMs) {
+    public String createRefreshToken(String accountId, long expireTimeMs) {
         Claims claims = Jwts.claims();
         claims.put("accountId", accountId);
         claims.put("type", "refresh");
@@ -62,7 +73,7 @@ public class JwtUtil {
             .setClaims(claims)
             .setIssuedAt(new Date(System.currentTimeMillis()))
             .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-            .signWith(SignatureAlgorithm.HS256, key)
+            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
             .compact();
     }
 }
