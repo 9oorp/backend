@@ -6,8 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class MemberDetails {
-
     private String accountId;
     private String memberName;
-
+    private RoleType roleType;
 }
