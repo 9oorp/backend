@@ -1,5 +1,6 @@
 package com.goorp.backend.service;
 
+import com.goorp.backend.configuration.RoleType;
 import com.goorp.backend.domain.Member;
 import com.goorp.backend.exception.ErrorCode;
 import com.goorp.backend.exception.MemberException;
@@ -7,7 +8,6 @@ import com.goorp.backend.repository.MemberRepository;
 import com.goorp.backend.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,20 +16,22 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
-@Service
+
+
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
-    @Value(value = "${jwt.secret}")
-    private String key;
+    private final JwtUtil jwtUtil;
+
     private Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
     private Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
 
     @Transactional
-    public String join(String accountId, String password, String passwordConfirm, String name) {
+    public void join(String accountId, String password, String passwordConfirm, String name) {
         // memberId 중복 체크
         memberRepository.findByAccountId(accountId)
             .ifPresent(member -> {
@@ -50,9 +52,7 @@ public class MemberService {
             .createdAt(now)
             .updatedAt(now)
             .build();
-
         memberRepository.save(member);
-        return "SUCCESS";
     }
 
     @Transactional(readOnly = true)
@@ -65,9 +65,9 @@ public class MemberService {
             throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
-        String accessToken = JwtUtil.createAccessToken(findAccount.getAccountId(),
-            findAccount.getName(), key, accessExpireTimeMs);
-        String refreshToken = JwtUtil.createRefreshToken(findAccount.getAccountId(), key,
+        String accessToken =jwtUtil.createAccessToken(findAccount.getAccountId(),
+            findAccount.getName(), RoleType.USER, accessExpireTimeMs);
+        String refreshToken = jwtUtil.createRefreshToken(findAccount.getAccountId(),
             refreshExpireTimeMs);
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
@@ -76,24 +76,17 @@ public class MemberService {
     }
 
     public boolean isRefreshToken(String token) {
-        if (!JwtUtil.getType(token, key).equals("refresh")) {
+        if (!jwtUtil.getType(token).equals("refresh")) {
             return false;
         }
         return true;
     }
 
-    public boolean isRefreshExpired(String token) {
-        if (JwtUtil.isExpired(token, key)) {
-            return false;
-        }
-        return true;
-    }
-
-    public String createAccessToken(String token) {
-        String accountId = JwtUtil.getAccountId(token, key);
+    public String refreshToAccessToken(String token) {
+        String accountId = jwtUtil.getAccountId(token);
         Member findMember = memberRepository.findByAccountId(accountId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 가 없습니다."));
-        return JwtUtil.createAccessToken(findMember.getAccountId(), findMember.getName(), key,
-            accessExpireTimeMs);
+            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 멤버가 존재하지 않습니다."));
+        return jwtUtil.createAccessToken(findMember.getAccountId(), findMember.getName(),
+            RoleType.USER, accessExpireTimeMs);
     }
 }

@@ -33,7 +33,6 @@ public class Member {
     @Column(nullable = false)
     private LocalDate updatedAt;
 
-    //    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy = "member")
     private List<Post> posts = new ArrayList<>();
 
