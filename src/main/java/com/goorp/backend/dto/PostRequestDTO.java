@@ -28,20 +28,20 @@ public class PostRequestDTO {
     private String accountId;
 
     public Set<Subject> getSubject() {
-        return Arrays.stream(extracdt(subject))
+        return Arrays.stream(extract(subject))
                 .map(String::trim)
                 .map(Subject::valueOf)
                 .collect(Collectors.toSet());
     }
 
     public Set<TechStack> getStack() {
-       return Arrays.stream(extracdt(stack))
+       return Arrays.stream(extract(stack))
                 .map(String::trim)
                 .map(TechStack::valueOf)
                 .collect(Collectors.toSet());
     }
 
-    private String[] extracdt(String fullStr) {
+    private String[] extract(String fullStr) {
         fullStr = fullStr.replace("[", "");
         fullStr = fullStr.replace("]", "");
         return fullStr.split(",");
