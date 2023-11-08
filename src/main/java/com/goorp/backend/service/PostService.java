@@ -108,8 +108,8 @@ public class PostService {
             .title(requestDTO.getTitle())
             .content(requestDTO.getContent())
             .classification(requestDTO.getClassification())
-            .subject(requestDTO.getSubject())
-            .stack(requestDTO.getStack())
+            .subjects(requestDTO.getSubject())
+            .stacks(requestDTO.getStack())
             .recruitNum(requestDTO.getRecruitNum())
             .contactUrl(requestDTO.getContactUrl())
             .status(requestDTO.getStatus())
@@ -153,21 +153,13 @@ public class PostService {
             return null;
         }
 
-        List<String> subjectList = Arrays.stream(post.getSubject().split(","))
-            .map(String::trim)
-            .collect(Collectors.toList());
-
-        List<String> stackList = Arrays.stream(post.getStack().split(","))
-            .map(String::trim)
-            .collect(Collectors.toList());
-
         return new PostResponseDTO(
             post.getId(),
             post.getTitle(),
             post.getContent(),
             post.getClassification(),
-            subjectList,
-            stackList,
+            post.getSubjects(),
+            post.getStacks(),
             post.getRecruitNum(),
             post.getContactUrl(),
             post.getStatus(),
@@ -184,8 +176,8 @@ public class PostService {
             .title(requestDTO.getTitle())
             .content(requestDTO.getContent())
             .classification(requestDTO.getClassification())
-            .subject(requestDTO.getSubject())
-            .stack(requestDTO.getStack())
+            .subjects(requestDTO.getSubject())
+            .stacks(requestDTO.getStack())
             .recruitNum(requestDTO.getRecruitNum())
             .contactUrl(requestDTO.getContactUrl())
             .status(requestDTO.getStatus())
