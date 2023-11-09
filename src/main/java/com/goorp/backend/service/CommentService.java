@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,26 +36,29 @@ public class CommentService {
 
     // CREATE
     @Transactional
-    public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto) {
+    public CommentResponseDto createComment(Long postId, CommentRequestDto request,
+        String accountId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new IllegalArgumentException("포스트 ID를 찾을 수 없습니다: " + postId));
 
-        Member member = memberRepository.findByName(commentRequestDto.getMemberName())
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "MemberName 이 없습니다."));
+        Member member = memberRepository.findByAccountId(accountId)
+            .orElseThrow(
+                () -> new IllegalArgumentException("멤버 ID를 찾을 수 없습니다: " + accountId));
 
-        Comment comment = Comment.builder()
-            .post(post)
-            .member(member)
-            .content(commentRequestDto.getContent())
-            .commentGroup(commentRequestDto.getGroup())
-            .groupCnt(commentRequestDto.getGroupCnt())
-            .depth(commentRequestDto.getDepth())
-            .createdAt(LocalDate.now())
-            .updatedAt(LocalDate.now())
-            .build();
+        Comment comment;
+        if (request.hasParentComment()) {
+            Comment parentComment = commentRepository.findById((long) request.getParentCommentId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "부모 댓글 ID를 찾을 수 없습니다: " + request.getParentCommentId()));
+            comment = Comment.replyToComment(request.getContent(), member, post, parentComment);
+        } else {
+            comment = Comment.createComment(request.getContent(), member, post);
+        }
 
-        Comment savedComment = commentRepository.save(comment);
-        return commentResponseDto(savedComment);
+        comment = commentRepository.save(comment);
+        comment.updateCommentGroup();
+
+        return commentResponseDto(comment);
     }
 
     // READ
@@ -75,24 +77,19 @@ public class CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    public CommentResponseDto commentResponseDto(Comment comment) {
+    private CommentResponseDto commentResponseDto(Comment comment) {
         if (comment == null) {
             return null;
         }
-
         return new CommentResponseDto(
             comment.getId(),
             comment.getContent(),
             comment.getCommentGroup(),
-            comment.getGroupCnt(),
             comment.getDepth(),
-            comment.getPost().getId(),
-            comment.getMember().getName(),
             comment.getCreatedAt(),
             comment.getUpdatedAt()
         );
     }
-
 }
 
 
