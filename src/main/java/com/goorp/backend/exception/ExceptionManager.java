@@ -28,6 +28,14 @@ public class ExceptionManager {
     }
 
     @ExceptionHandler
+    public ApiErrorResponseDto runtimeExceptionHandler(CommentException e) {
+        return ApiErrorResponseDto.builder()
+            .ok(false)
+            .errorMessage(e.getMessage())
+            .build();
+    }
+
+    @ExceptionHandler
     public ApiErrorResponseDto processValidationError(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         String firstErrorMessage = bindingResult.getAllErrors().get(0).getDefaultMessage();

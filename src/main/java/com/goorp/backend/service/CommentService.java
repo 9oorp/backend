@@ -39,16 +39,16 @@ public class CommentService {
     public CommentResponseDto createComment(Long postId, CommentRequestDto request,
         String accountId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new IllegalArgumentException("포스트 ID를 찾을 수 없습니다: " + postId));
+            .orElseThrow(() -> new CommentException(ErrorCode.NOT_FOUND_POST,"포스트 ID를 찾을 수 없습니다: " + postId));
 
         Member member = memberRepository.findByAccountId(accountId)
             .orElseThrow(
-                () -> new IllegalArgumentException("멤버 ID를 찾을 수 없습니다: " + accountId));
+                () -> new CommentException(ErrorCode.NOT_FOUND_MEMBER,"멤버 ID를 찾을 수 없습니다: " + accountId));
 
         Comment comment;
         if (request.hasParentComment()) {
             Comment parentComment = commentRepository.findById((long) request.getParentCommentId())
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new CommentException(ErrorCode.NOT_FOUND_COMMENT,
                     "부모 댓글 ID를 찾을 수 없습니다: " + request.getParentCommentId()));
             comment = Comment.replyToComment(request.getContent(), member, post, parentComment);
         } else {
