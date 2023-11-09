@@ -49,16 +49,16 @@ public class PostController {
         @RequestParam int page,
         @RequestParam String classification,
         @RequestParam String sort,
-        @RequestParam(required = false) String stdsub,
+        @RequestParam(required = false) String subject,
         @RequestParam(required = false) String stack,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search
     ) {
         List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId,
-            page, classification, sort, stdsub, stack, status, search);
+            page, classification, sort, subject, stack, status, search);
 
         long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,
-            stdsub, stack, status, search);
+            subject, stack, status, search);
 
         return ResponseEntity.ok(
             ApiResponseDto.builder()

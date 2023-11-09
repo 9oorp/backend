@@ -35,6 +35,7 @@ import java.io.IOException;
 
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
+
     private final AuthenticationEntryPoint entryPoint;
     private final JwtUtil jwtUtil;
 
@@ -64,7 +65,8 @@ public class JwtFilter extends OncePerRequestFilter {
         List<String> patterns = skipPatterns.getOrDefault(requestMethod, Collections.emptyList());
 
         boolean isH2Console = requestURI.startsWith("/h2-console/");
-        boolean isSkipUrl = patterns.stream().anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
+        boolean isSkipUrl = patterns.stream()
+            .anyMatch(pattern -> pathMatcher.match(pattern, requestURI));
         return isH2Console || isSkipUrl;
     }
 
@@ -77,46 +79,48 @@ public class JwtFilter extends OncePerRequestFilter {
             String token = getToken(request);
             if (token == null) {
                 log.error("토큰이 존재하지 않음");
-                throw new InsufficientAuthenticationException("토큰이 존재하지 않습니다.", null);
+                throw new InsufficientAuthenticationException("토큰이 존재하지 않습니다.");
             }
             if (validateToken(token)) {
                 String type = jwtUtil.getType(token);
-                MemberDetails memberDetails;
-                UsernamePasswordAuthenticationToken authentication;
-                if (type.equals("refresh")) {
-                    if (!request.getRequestURI().equals("/api/auth/refresh-token")) {
-                        throw new InsufficientAuthenticationException("access token이 아닙니다.", null);
-                    }
-                    String accountId = jwtUtil.getAccountId(token);
-                    memberDetails = new MemberDetails(accountId);
-
-                    authentication =
-                        new UsernamePasswordAuthenticationToken(memberDetails, null,
-                            null);
-                } else {
-                    String accountId = jwtUtil.getAccountId(token);
-                    String memberName = jwtUtil.getMemberName(token);
-                    String role = jwtUtil.getRole(token);
-                    RoleType roleType = RoleType.valueOf(role);
-                    memberDetails = new MemberDetails(accountId, memberName, roleType);
-
-                    authentication =
-                        new UsernamePasswordAuthenticationToken(memberDetails, null,
-                            getAuthorities(role));
+                if ("refresh".equals(type) && !request.getRequestURI()
+                    .equals("/api/auth/refresh-token")) {
+                    throw new InsufficientAuthenticationException("access token이 필요합니다.");
+                } else if (!"refresh".equals(type) && request.getRequestURI()
+                    .equals("/api/auth/refresh-token")) {
+                    throw new InsufficientAuthenticationException("refresh token이 필요합니다.");
                 }
+                // 공통 로직 처리
+                String accountId = jwtUtil.getAccountId(token);
+                MemberDetails memberDetails = createMemberDetails(type, accountId, token);
+
+                UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(memberDetails, null,
+                        "refresh".equals(type) ? null : getAuthorities(jwtUtil.getRole(token)));
 
                 authentication.setDetails(
                     new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-        } catch (AuthenticationException e) {
+        } catch (
+            AuthenticationException e) {
             SecurityContextHolder.clearContext();
             entryPoint.commence(request, response, e);
             return;
         }
-
         chain.doFilter(request, response);
+    }
+
+    private MemberDetails createMemberDetails(String type, String accountId, String token) {
+        if ("refresh".equals(type)) {
+            return new MemberDetails(accountId); // 리프레쉬 토큰에 필요한 세부 사항
+        } else {
+            String memberName = jwtUtil.getMemberName(token);
+            String role = jwtUtil.getRole(token);
+            RoleType roleType = RoleType.valueOf(role);
+            return new MemberDetails(accountId, memberName, roleType); // 액세스 토큰에 필요한 세부 사항
+        }
     }
 
     private String getToken(HttpServletRequest request) {
