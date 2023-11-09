@@ -20,7 +20,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         HttpServletResponse response,
         AuthenticationException authException) throws IOException {
 
-        response.setStatus(HttpServletResponse.SC_OK);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         ApiErrorResponseDto result = ApiErrorResponseDto.builder()
             .ok(false)
             .errorMessage(authException.getMessage())
