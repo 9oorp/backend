@@ -17,7 +17,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
     Optional<Post> findById(Long postId);
 
     @EntityGraph(attributePaths = {"curriculum", "member"})
-    Page<Post> findByMember_AccountId(String accountId, Pageable pageable);
+    Page<Post> findByMemberAccountId(String accountId, Pageable pageable);
 
     long count(Specification<Post> spec);
 }

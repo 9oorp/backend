@@ -27,8 +27,8 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
     private final JwtUtil jwtUtil;
 
-    private Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
-    private Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
+    private final Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
+    private final Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
 
     @Transactional
     public void join(String accountId, String password, String passwordConfirm, String name) {
