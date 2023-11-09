@@ -23,8 +23,10 @@ public class CommentController {
     @PostMapping("/{postId}/comments")
     public ApiResponseDto createComment(
         @PathVariable Long postId,
-        @RequestBody CommentRequestDto commentRequestDto) {
-        CommentResponseDto savedComment = commentService.createComment(postId, commentRequestDto);
+        @RequestBody CommentRequestDto commentRequestDto,
+        @AuthenticationPrincipal MemberDetails memberDetails
+        ) {
+        CommentResponseDto savedComment = commentService.createComment(postId, commentRequestDto, memberDetails.getAccountId());
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "comment 생성 성공", "comment", savedComment))
@@ -50,5 +52,4 @@ public class CommentController {
             .data(Map.of("message", "comment 삭제 성공"))
             .build();
     }
-
 }
