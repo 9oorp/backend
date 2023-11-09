@@ -1,17 +1,18 @@
 package com.goorp.backend.domain;
 
+import java.time.LocalDateTime;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Builder
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@NoArgsConstructor
 @Entity
 public class Comment {
 
@@ -24,13 +25,11 @@ public class Comment {
     @Column
     private int commentGroup;
     @Column
-    private int groupCnt;
-    @Column
     private int depth;
     @Column(nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     @Column(nullable = false)
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
