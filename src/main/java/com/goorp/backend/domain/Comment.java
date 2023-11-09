@@ -39,4 +39,33 @@ public class Comment {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    public static Comment createComment(String content, Member member, Post post) {
+        return Comment.builder()
+            .content(content)
+            .commentGroup(0)
+            .depth(1)
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .member(member)
+            .post(post)
+            .build();
+    }
+
+    public static Comment replyToComment(String content, Member member, Post post, Comment parent) {
+        return Comment.builder()
+            .content(content)
+            .commentGroup(parent.getCommentGroup())
+            .depth(2)
+            .createdAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .member(member)
+            .post(post)
+            .build();
+    }
+
+    public void updateCommentGroup() {
+        if (this.commentGroup == 0) {
+            this.commentGroup = this.id.intValue();
+        }
+    }
 }
