@@ -1,10 +1,12 @@
 package com.goorp.backend.controller;
 
+import com.goorp.backend.configuration.MemberDetails;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.CommentRequestDto;
 import com.goorp.backend.dto.CommentResponseDto;
 import com.goorp.backend.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,14 +14,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/posts")
+@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
-
-    @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
 
     // CREATE
     @PostMapping("/{postId}/comments")
