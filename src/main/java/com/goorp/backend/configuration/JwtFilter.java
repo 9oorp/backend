@@ -78,7 +78,7 @@ public class JwtFilter extends OncePerRequestFilter {
         try {
             String token = getToken(request);
             if (token == null) {
-                log.error("토큰이 존재하지 않음");
+                log.debug("토큰이 존재하지 않음");
                 throw new InsufficientAuthenticationException("토큰이 존재하지 않습니다.");
             }
             if (validateToken(token)) {
@@ -139,19 +139,19 @@ public class JwtFilter extends OncePerRequestFilter {
                 .parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            log.error("ExpiredJwtException JWT 만료");
+            log.debug("ExpiredJwtException JWT 만료");
             throw new InsufficientAuthenticationException("토큰 만료", e);
         } catch (UnsupportedJwtException e) {
-            log.error("UnsupportedJwtException JWT 지원되지 않는 형식");
+            log.debug("UnsupportedJwtException JWT 지원되지 않는 형식");
             throw new BadCredentialsException("JWT 지원되지 않는 형식", e);
         } catch (MalformedJwtException e) {
-            log.error("MalformedJwtException JWT 구조가 올바르지 않는 형식");
+            log.debug("MalformedJwtException JWT 구조가 올바르지 않는 형식");
             throw new BadCredentialsException("JWT 구조가 올바르지 않는 형식", e);
         } catch (SignatureException e) {
-            log.error("SignatureException JWT 서명이 유효하지 않음");
+            log.debug("SignatureException JWT 서명이 유효하지 않음");
             throw new BadCredentialsException("JWT 서명이 유효하지 않음", e);
         } catch (IllegalArgumentException e) {
-            log.error("IllegalArgumentException 메서드에 전달된 인자가 부적절함");
+            log.debug("IllegalArgumentException 메서드에 전달된 인자가 부적절함");
             throw new InsufficientAuthenticationException("메서드에 전달된 인자가 부적절함", e);
         }
     }

@@ -1,7 +1,7 @@
 package com.goorp.backend.configuration;
 
 import com.goorp.backend.utils.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -15,10 +15,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
-    private final AuthenticationEntryPoint entryPoint = new JwtAuthenticationEntryPoint();
-    @Autowired
-    private JwtUtil jwtUtil;
+
+    private final AuthenticationEntryPoint entryPoint;
+    private final JwtUtil jwtUtil;
 
 
     @Bean
