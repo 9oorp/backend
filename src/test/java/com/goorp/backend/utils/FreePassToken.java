@@ -11,12 +11,11 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 @ActiveProfiles("test")
 public class FreePassToken {
+    private final long MaxExpireTimeMs = 1000L * 60 * 60 * 24 * 365 * 10;  // 10년
     @Autowired
     JwtUtil jwtUtil;
     @Test
     void createFreePassToken() {
-        long MaxExpireTimeMs = 1000L * 60 * 60 * 24 * 365 * 10;  // 10년
-
         String freePassToken = jwtUtil.createAccessToken("hello1", "홍길동(풀스택 2회차)", RoleType.USER,
             MaxExpireTimeMs);
         log.info("freePassToken = {}", freePassToken);
@@ -24,8 +23,6 @@ public class FreePassToken {
 
     @Test
     void createFreePassTokenByRefreshToken() {
-        long MaxExpireTimeMs = 1000L * 60 * 60 * 24 * 365 * 10;  // 10년
-
         String refreshFreePassToken = jwtUtil.createRefreshToken("hello1", MaxExpireTimeMs);
         log.info("refreshFreePassToken = {}", refreshFreePassToken);
     }
