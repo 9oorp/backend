@@ -1,0 +1,71 @@
+[2023-11-13 14:17:19:721][background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+[2023-11-13 14:17:19:731][main] INFO  c.goorp.backend.BackendApplication - Starting BackendApplication using Java 19.0.2 on goormui-MacBookPro.local with PID 13845 (/Users/goorm/project/backend/build/classes/java/main started by goorm in /Users/goorm/project/backend)
+[2023-11-13 14:17:19:732][main] INFO  c.goorp.backend.BackendApplication - The following 1 profile is active: "local"
+[2023-11-13 14:17:20:1518][main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-11-13 14:17:20:1585][main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 60 ms. Found 4 JPA repository interfaces.
+[2023-11-13 14:17:21:2075][main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[2023-11-13 14:17:21:2080][main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+[2023-11-13 14:17:21:2081][main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+[2023-11-13 14:17:21:2081][main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.79]
+[2023-11-13 14:17:21:2158][main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[2023-11-13 14:17:21:2158][main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1363 ms
+[2023-11-13 14:17:21:2187][main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+[2023-11-13 14:17:21:2394][main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+[2023-11-13 14:17:21:2419][main] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:goorpLocal'
+[2023-11-13 14:17:21:2613][main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-11-13 14:17:21:2637][main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-11-13 14:17:21:2719][main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-11-13 14:17:22:2765][main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[2023-11-13 14:17:22:3259][main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-11-13 14:17:22:3265][main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-11-13 14:17:22:3749][main] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 89378261-41e8-4ad9-a2ae-7acb4f2e2f55
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+[2023-11-13 14:17:23:3817][main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2023-11-13 14:17:23:3955][main] INFO  o.s.s.w.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@31a80c88, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7602c65d, org.springframework.security.web.context.SecurityContextPersistenceFilter@5a45c218, org.springframework.security.web.header.HeaderWriterFilter@cbc3bf3, org.springframework.web.filter.CorsFilter@5a5c2889, org.springframework.security.web.authentication.logout.LogoutFilter@251e2f4a, com.goorp.backend.configuration.JwtExceptionFilter@7668f8fd, com.goorp.backend.configuration.JwtFilter@75566f4, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@57ac236a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5c20505f, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6785786d, org.springframework.security.web.session.SessionManagementFilter@2b4ba2d9, org.springframework.security.web.access.ExceptionTranslationFilter@125a8ab6, org.springframework.security.web.access.intercept.AuthorizationFilter@5a23b9d1]
+[2023-11-13 14:17:23:4273][main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+[2023-11-13 14:17:23:4286][main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[2023-11-13 14:17:23:4301][main] INFO  c.goorp.backend.BackendApplication - Started BackendApplication in 4.076 seconds (JVM running for 9.743)
+[2023-11-13 14:18:43:84732][SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-11-13 14:18:43:84740][SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+[2023-11-13 14:18:43:84743][SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+[2023-11-13 14:19:09:704][background-preinit] INFO  o.h.validator.internal.util.Version - HV000001: Hibernate Validator 6.2.5.Final
+[2023-11-13 14:19:09:709][main] INFO  c.goorp.backend.BackendApplication - Starting BackendApplication using Java 19.0.2 on goormui-MacBookPro.local with PID 13902 (/Users/goorm/project/backend/build/classes/java/main started by goorm in /Users/goorm/project/backend)
+[2023-11-13 14:19:09:710][main] INFO  c.goorp.backend.BackendApplication - The following 1 profile is active: "local"
+[2023-11-13 14:19:09:1543][main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2023-11-13 14:19:10:1594][main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 45 ms. Found 4 JPA repository interfaces.
+[2023-11-13 14:19:10:2085][main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[2023-11-13 14:19:10:2089][main] INFO  o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+[2023-11-13 14:19:10:2090][main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+[2023-11-13 14:19:10:2090][main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.79]
+[2023-11-13 14:19:10:2169][main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[2023-11-13 14:19:10:2170][main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 1380 ms
+[2023-11-13 14:19:10:2202][main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+[2023-11-13 14:19:10:2366][main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+[2023-11-13 14:19:10:2390][main] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:goorpLocal'
+[2023-11-13 14:19:11:2575][main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+[2023-11-13 14:19:11:2604][main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 5.6.15.Final
+[2023-11-13 14:19:11:2700][main] INFO  o.h.annotations.common.Version - HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2023-11-13 14:19:11:2753][main] INFO  org.hibernate.dialect.Dialect - HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+[2023-11-13 14:19:11:3258][main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2023-11-13 14:19:11:3263][main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2023-11-13 14:19:12:3683][main] WARN  o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: d2337989-edc8-4b21-b078-2cfd0c9db827
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+[2023-11-13 14:19:12:3749][main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2023-11-13 14:19:12:3886][main] INFO  o.s.s.w.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@572db5ee, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@36f80ceb, org.springframework.security.web.context.SecurityContextPersistenceFilter@1d2d793d, org.springframework.security.web.header.HeaderWriterFilter@4e210016, org.springframework.web.filter.CorsFilter@31ab75a5, org.springframework.security.web.authentication.logout.LogoutFilter@4eab9aec, com.goorp.backend.configuration.JwtExceptionFilter@17541204, com.goorp.backend.configuration.JwtFilter@2dec57c5, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7a2fd94c, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@30e15628, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@5b8599c7, org.springframework.security.web.session.SessionManagementFilter@43312512, org.springframework.security.web.access.ExceptionTranslationFilter@123d0816, org.springframework.security.web.access.intercept.AuthorizationFilter@384b3fe7]
+[2023-11-13 14:19:12:4212][main] INFO  o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+[2023-11-13 14:19:12:4226][main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[2023-11-13 14:19:12:4240][main] INFO  c.goorp.backend.BackendApplication - Started BackendApplication in 4.054 seconds (JVM running for 9.754)
+[2023-11-13 14:20:03:55033][http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2023-11-13 14:20:03:55035][http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[2023-11-13 14:20:03:55038][http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+[2023-11-13 14:20:56:108331][SpringApplicationShutdownHook] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+[2023-11-13 14:20:56:108336][SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+[2023-11-13 14:20:56:108339][SpringApplicationShutdownHook] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
