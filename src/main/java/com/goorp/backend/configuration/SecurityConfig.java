@@ -38,6 +38,7 @@ public class SecurityConfig {
             .and()
             .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
+            .addFilterBefore(new AccessLoggingFilter(), JwtExceptionFilter.class)
             .headers().frameOptions().disable()
             .and()
             .build();
