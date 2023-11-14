@@ -56,13 +56,13 @@ public class CommentService {
             .build();
 
         Comment savedComment = commentRepository.save(comment);
-        return commentResponseDto(savedComment);
+        return CommentResponseDto.of(savedComment);
     }
 
     // READ
     public List<CommentResponseDto> getAllComments(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream().map(this::commentResponseDto).collect(Collectors.toList());
+        return comments.stream().map(CommentResponseDto::of).collect(Collectors.toList());
     }
 
     // DELETE
@@ -74,25 +74,6 @@ public class CommentService {
             .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "commentId 가 없습니다."));
         commentRepository.deleteById(commentId);
     }
-
-    public CommentResponseDto commentResponseDto(Comment comment) {
-        if (comment == null) {
-            return null;
-        }
-
-        return new CommentResponseDto(
-            comment.getId(),
-            comment.getContent(),
-            comment.getCommentGroup(),
-            comment.getGroupCnt(),
-            comment.getDepth(),
-            comment.getPost().getId(),
-            comment.getMember().getName(),
-            comment.getCreatedAt(),
-            comment.getUpdatedAt()
-        );
-    }
-
 }
 
 
