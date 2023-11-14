@@ -4,10 +4,9 @@ import com.goorp.backend.domain.Post;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.MemberJoinDto;
 import com.goorp.backend.dto.MemberLoginDto;
-import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.dto.PostResponseDto;
 import com.goorp.backend.repository.PostRepository;
 import com.goorp.backend.service.MemberService;
-import com.goorp.backend.service.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +24,6 @@ import java.util.Map;
 public class MemberController {
 
     private final MemberService memberService;
-    private final PostService postService;
     private final PostRepository postRepository;
 
     @PostMapping("/join")
@@ -54,8 +52,8 @@ public class MemberController {
         PageRequest pageRequest = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "createdAt"));
         List<Post> findAllPost = postRepository.findByMember_AccountId(accountId, pageRequest)
             .getContent();
-        List<PostResponseDTO> posts = findAllPost.stream()
-            .map(postService::convertToResponseDTO)
+        List<PostResponseDto> posts = findAllPost.stream()
+            .map(PostResponseDto::of)
             .toList();
 
         return ApiResponseDto.builder()
