@@ -6,13 +6,18 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,13 +30,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
-import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Slf4j
 public class JwtFilter extends OncePerRequestFilter {
@@ -83,16 +81,15 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             if (validateToken(token)) {
                 String type = jwtUtil.getType(token);
-                if ("refresh".equals(type) && !request.getRequestURI()
-                    .equals("/api/auth/refresh-token")) {
+                if ("refresh".equals(type) && !request.getRequestURI().equals("/api/auth/refresh-token")) {
                     throw new InsufficientAuthenticationException("access token이 필요합니다.");
-                } else if (!"refresh".equals(type) && request.getRequestURI()
+                }
+                if (!"refresh".equals(type) && request.getRequestURI()
                     .equals("/api/auth/refresh-token")) {
                     throw new InsufficientAuthenticationException("refresh token이 필요합니다.");
                 }
                 // 공통 로직 처리
-                String accountId = jwtUtil.getAccountId(token);
-                MemberDetails memberDetails = createMemberDetails(type, accountId, token);
+                MemberDetails memberDetails = createMemberDetails(type, token);
 
                 UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(memberDetails, null,
@@ -112,15 +109,14 @@ public class JwtFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-    private MemberDetails createMemberDetails(String type, String accountId, String token) {
+    private MemberDetails createMemberDetails(String type, String token) {
         if ("refresh".equals(type)) {
-            return new MemberDetails(accountId); // 리프레쉬 토큰에 필요한 세부 사항
-        } else {
-            String memberName = jwtUtil.getMemberName(token);
-            String role = jwtUtil.getRole(token);
-            RoleType roleType = RoleType.valueOf(role);
-            return new MemberDetails(accountId, memberName, roleType); // 액세스 토큰에 필요한 세부 사항
+            return new MemberDetails(jwtUtil.getMemberId(token));
         }
+        String memberName = jwtUtil.getMemberName(token);
+        String role = jwtUtil.getRole(token);
+        RoleType roleType = RoleType.valueOf(role);
+        return new MemberDetails(jwtUtil.getMemberId(token), jwtUtil.getAccountId(token), memberName, roleType);
     }
 
     private String getToken(HttpServletRequest request) {
