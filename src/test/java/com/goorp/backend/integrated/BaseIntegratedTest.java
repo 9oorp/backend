@@ -3,8 +3,10 @@ package com.goorp.backend.integrated;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goorp.backend.domain.Member;
 import com.goorp.backend.dto.ApiResponseDto;
+import com.goorp.backend.repository.CommentRepository;
 import com.goorp.backend.repository.MemberRepository;
 import com.goorp.backend.repository.PostRepository;
+import com.goorp.backend.service.CommentService;
 import com.goorp.backend.service.MemberService;
 import com.goorp.backend.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeAll;
@@ -43,22 +45,37 @@ public class BaseIntegratedTest {
     @Autowired
     protected ObjectMapper objectMapper;
 
+    @Autowired
+    protected CommentRepository commentRepository;
+
+    @Autowired
+    protected CommentService commentService;
+
+    @Autowired
+    JwtUtil jwtUtil;
+
+    static boolean isAlreadySetup = false;
+
     @Value("${jwt.secret}")
     private String secret;
 
     protected String getUserToken(Long id) {
         Member member = memberRepository.findById(id).orElseThrow();
-        String accessToken = JwtUtil.createAccessToken(member.getAccountId(), member.getName(), secret, 1000L);
+        String accessToken = jwtUtil.createAccessToken(member, 1000*60*10);
         return "Bearer " + accessToken;
     }
 
     @BeforeAll
     static void setup(@Autowired DataSource dataSource) {
-        try (Connection conn = dataSource.getConnection()) {
-            ScriptUtils.executeSqlScript(conn, new ClassPathResource("/data-test.sql"));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if(!isAlreadySetup) {
+            try (Connection conn = dataSource.getConnection()) {
+                ScriptUtils.executeSqlScript(conn, new ClassPathResource("/data-test.sql"));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        isAlreadySetup = true;
     }
 
     /**
