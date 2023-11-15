@@ -44,6 +44,7 @@ public class SecurityConfig {
             // JWT 필터 설정
             .addFilterBefore(new JwtFilter(entryPoint, jwtUtil),
                 UsernamePasswordAuthenticationFilter.class)
+             .addFilterBefore(new AccessLoggingFilter(), JwtFilter.class)
             .headers().frameOptions().disable() // X-Frame-Options 헤더 비활성화
             .and()
             // jwt 에러 처리
