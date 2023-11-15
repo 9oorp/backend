@@ -2,14 +2,19 @@ package com.goorp.backend.controller;
 
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.PostRequestDto;
-import com.goorp.backend.dto.PostResponseDto;
 import com.goorp.backend.service.PostService;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
@@ -49,22 +54,22 @@ public class PostController {
         @RequestParam int page,
         @RequestParam String classification,
         @RequestParam String sort,
-        @RequestParam(required = false) String stdsub,
+        @RequestParam(required = false) String subject,
         @RequestParam(required = false) String stack,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search
     ) {
-        List<PostResponseDto> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId,
-            page, classification, sort, stdsub, stack, status, search);
+        List<PostResponseDto> postResponseDto = postService.findAllPostsByCurriculum(curriculumId,
+            page, classification, sort, subject, stack, status, search);
 
         long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,
-            stdsub, stack, status, search);
+            subject, stack, status, search);
 
         return ResponseEntity.ok(
             ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("message", "포스트 목록 조회 성공",
-                    "posts", postResponseDTO,
+                    "posts", postResponseDto,
                     "totalCount", totalCount))
                 .build()
         );

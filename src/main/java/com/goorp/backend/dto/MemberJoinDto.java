@@ -1,12 +1,13 @@
 package com.goorp.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
+import com.goorp.backend.domain.Member;
+import java.time.LocalDate;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +23,19 @@ public class MemberJoinDto {
     private String password;
     @NotBlank(message = "{NotBlank.passwordConfirm}")
     private String passwordConfirm;
+
+    public void setEncodingPassword(String password) {
+        this.password = password;
+    }
+
+    public static Member joinDtoToMember(MemberJoinDto dto) {
+        LocalDate now = LocalDate.now();
+        return Member.builder()
+            .accountId(dto.getAccountId())
+            .password(dto.getPassword())
+            .name(dto.getMemberName())
+            .createdAt(now)
+            .updatedAt(now)
+            .build();
+    }
 }

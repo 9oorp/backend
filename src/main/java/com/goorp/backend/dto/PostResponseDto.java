@@ -7,13 +7,12 @@ import com.goorp.backend.domain.vo.TechStack;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PostResponseDto {
+public class PostResponseDTO {
 
     private Long id;
     private String title;
