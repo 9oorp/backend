@@ -15,8 +15,4 @@ public class CommentRequestDto {
     public boolean hasParentComment() {
         return parentCommentId > 0;
     }
-
-
-
-
 }

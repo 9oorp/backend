@@ -45,7 +45,10 @@ public class CommentController {
 
     // DELETE
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ApiResponseDto deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
+    public ApiResponseDto deleteComment(
+        @PathVariable Long postId,
+        @PathVariable Long commentId
+    ) {
         commentService.deleteComment(postId, commentId);
         return ApiResponseDto.builder()
             .ok(true)
