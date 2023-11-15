@@ -12,7 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PostResponseDTO {
+public class PostResponseDto {
 
     private Long id;
     private String title;

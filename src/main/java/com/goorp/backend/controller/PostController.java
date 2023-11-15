@@ -2,7 +2,10 @@ package com.goorp.backend.controller;
 
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.PostRequestDto;
+import com.goorp.backend.dto.PostResponseDto;
 import com.goorp.backend.service.PostService;
+
+import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
