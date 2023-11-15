@@ -3,7 +3,7 @@ package com.goorp.backend.controller;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.MemberJoinDto;
 import com.goorp.backend.dto.MemberLoginDto;
-import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.dto.PostResponseDto;
 import com.goorp.backend.repository.PostRepository;
 import com.goorp.backend.service.MemberService;
 import java.util.List;
@@ -50,7 +50,7 @@ public class MemberController {
     public ApiResponseDto getMemberPosts(
         @PathVariable String accountId
     ) {
-        List<PostResponseDTO> posts = memberService.getMemberPosts(accountId);
+        List<PostResponseDto> posts = memberService.getMemberPosts(accountId);
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("Posts", posts))

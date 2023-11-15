@@ -25,7 +25,7 @@ public class CommentService {
 
     // CREATE
     @Transactional
-    public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto) {
+    public CommentResponseDto createComment(Long postId, CommentRequestDto request, String accountId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
 

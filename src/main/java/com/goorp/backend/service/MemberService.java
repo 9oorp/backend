@@ -1,10 +1,9 @@
 package com.goorp.backend.service;
 
-import com.goorp.backend.configuration.MemberDetails;
 import com.goorp.backend.domain.Member;
 import com.goorp.backend.domain.Post;
 import com.goorp.backend.dto.MemberJoinDto;
-import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.dto.PostResponseDto;
 import com.goorp.backend.exception.ErrorCode;
 import com.goorp.backend.exception.MemberException;
 import com.goorp.backend.repository.MemberRepository;
@@ -32,7 +31,6 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtUtil jwtUtil;
-    private final PostService postService;
     private final PostRepository postRepository;
 
     private final Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
@@ -81,7 +79,7 @@ public class MemberService {
         return jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
     }
 
-    public List<PostResponseDTO> getMemberPosts(String accountId) {
+    public List<PostResponseDto> getMemberPosts(String accountId) {
         PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         // 멤버 검색
@@ -95,7 +93,7 @@ public class MemberService {
 
         // 게시물 DTO로 변환
         return findAllPost.stream()
-            .map(postService::convertToResponseDTO)
+            .map(PostResponseDto::of)
             .collect(Collectors.toList());
     }
 }
