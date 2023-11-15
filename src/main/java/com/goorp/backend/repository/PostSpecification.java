@@ -1,6 +1,12 @@
 package com.goorp.backend.repository;
 
 import com.goorp.backend.domain.Post;
+import com.goorp.backend.domain.vo.Subject;
+import com.goorp.backend.domain.vo.TechStack;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.SetJoin;
+import org.springframework.data.jpa.domain.Specification;
+import javax.persistence.criteria.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.criteria.Predicate;
@@ -11,8 +17,8 @@ public class PostSpecification {
     public static Specification<Post> filter(
         Long curriculumId,
         String classification,
-        String stdsub,
-        String stack,
+        String subject,
+        String techStack,
         String status,
         String search
     ) {
@@ -26,35 +32,22 @@ public class PostSpecification {
                     criteriaBuilder.equal(root.get("curriculum").get("id"), curriculumId));
             }
 
-            // 다른 조건들도 비슷한 방식으로 추가할 수 있습니다.
             if (classification != null) {
                 predicates.add(criteriaBuilder.equal(root.get("classification"), classification));
             }
 
-            if (stdsub != null) {
-                predicates.add(criteriaBuilder.like(root.get("subject"), "%" + stdsub + "%"));
+            if (subject != null) {
+                Subject subjectEnum = Subject.valueOf(subject.toUpperCase());
+                SetJoin<Post, Subject> subjectsJoin = root.joinSet("subjects", JoinType.LEFT);
+                predicates.add(subjectsJoin.in(subjectEnum));
             }
 
-            //            if (stdsub != null) {
-//                String[] keywords = stack.split(",");
-//                List<Predicate> stackPredicates = new ArrayList<>();
-//                for (String keyword : keywords) {
-//                    stackPredicates.add(criteriaBuilder.like(root.get("stdsub"), "%" + keyword.trim() + "%"));
-//                }
-//                predicates.add(criteriaBuilder.and(stackPredicates.toArray(new Predicate[0])));
-//            }
 
-            if (stack != null) {
-                predicates.add(criteriaBuilder.like(root.get("stack"), "%" + stack + "%"));
+            if (techStack != null) {
+                TechStack stackEnum = TechStack.valueOf(techStack.toUpperCase());
+                SetJoin<Post, TechStack> stacksJoin = root.joinSet("stacks", JoinType.LEFT);
+                predicates.add(stacksJoin.in(stackEnum));
             }
-//            if (stack != null) {
-//                String[] keywords = stack.split(",");
-//                List<Predicate> stackPredicates = new ArrayList<>();
-//                for (String keyword : keywords) {
-//                    stackPredicates.add(criteriaBuilder.like(root.get("stack"), "%" + keyword.trim() + "%"));
-//                }
-//                predicates.add(criteriaBuilder.and(stackPredicates.toArray(new Predicate[0])));
-//            }
 
             if (status != null) {
                 if ("1".equals(status)) {

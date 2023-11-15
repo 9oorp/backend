@@ -5,6 +5,12 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import com.goorp.backend.domain.vo.Subject;
+import com.goorp.backend.domain.vo.TechStack;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,8 +21,8 @@ public class PostResponseDTO {
     private String title;
     private String content;
     private String classification;
-    private List<String> subject;
-    private List<String> stack;
+    private Set<Subject> subject;
+    private Set<TechStack> stack;
     private int recruitNum;
     private String contactUrl;
     private String status;

@@ -1,9 +1,13 @@
 package com.goorp.backend.controller;
 
+import com.goorp.backend.configuration.MemberDetails;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.CommentRequestDto;
 import com.goorp.backend.dto.CommentResponseDto;
 import com.goorp.backend.service.CommentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/posts")
+@RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
-
-    @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
 
     // CREATE
     @PostMapping("/{postId}/comments")
     public ApiResponseDto createComment(
         @PathVariable Long postId,
-        @RequestBody CommentRequestDto commentRequestDto) {
-        CommentResponseDto savedComment = commentService.createComment(postId, commentRequestDto);
+        @RequestBody CommentRequestDto commentRequestDto,
+        @AuthenticationPrincipal MemberDetails memberDetails
+        ) {
+        CommentResponseDto savedComment = commentService.createComment(postId, commentRequestDto, memberDetails.getAccountId());
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "comment 생성 성공", "comment", savedComment))
@@ -50,7 +52,10 @@ public class CommentController {
 
     // DELETE
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ApiResponseDto deleteComment(@PathVariable Long postId, @PathVariable Long commentId) {
+    public ApiResponseDto deleteComment(
+        @PathVariable Long postId,
+        @PathVariable Long commentId
+    ) {
         commentService.deleteComment(postId, commentId);
         return ApiResponseDto.builder()
             .ok(true)
