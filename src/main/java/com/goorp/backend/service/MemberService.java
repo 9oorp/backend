@@ -81,13 +81,8 @@ public class MemberService {
         return jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
     }
 
-    public List<PostResponseDTO> getMemberPosts(String accountId, MemberDetails memberDetails) {
-        PageRequest pageRequest = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "createdAt"));
-
-        // 권한 확인
-        if (!Objects.equals(memberDetails.getAccountId(), accountId)) {
-            throw new MemberException(ErrorCode.UNAUTHORIZED, "권한이 없습니다.");
-        }
+    public List<PostResponseDTO> getMemberPosts(String accountId) {
+        PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         // 멤버 검색
         if(!memberRepository.existsByAccountId(accountId)) {

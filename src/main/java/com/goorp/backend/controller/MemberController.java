@@ -48,10 +48,9 @@ public class MemberController {
 
     @GetMapping("/{accountId}/posts")
     public ApiResponseDto getMemberPosts(
-        @PathVariable String accountId,
-        @AuthenticationPrincipal MemberDetails memberDetails
+        @PathVariable String accountId
     ) {
-        List<PostResponseDTO> posts = memberService.getMemberPosts(accountId, memberDetails);
+        List<PostResponseDTO> posts = memberService.getMemberPosts(accountId);
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("Posts", posts))
