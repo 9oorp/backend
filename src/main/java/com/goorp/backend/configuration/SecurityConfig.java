@@ -1,46 +1,67 @@
 package com.goorp.backend.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.goorp.backend.utils.JwtUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
-@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value(value = "${jwt.secret}")
-    private String secretKey;
+    private final AuthenticationEntryPoint entryPoint;
+    private final JwtUtil jwtUtil;
+
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        return httpSecurity.
-            httpBasic().disable()
-            .csrf().disable()
-            .cors().and()
-            .authorizeHttpRequests()
-            .antMatchers("/h2-console/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/api/class/**/posts", "/api/posts/**/comments")
-            .authenticated()
-            .antMatchers(HttpMethod.PUT, "/api/class/**/posts/**").authenticated()
-            .antMatchers(HttpMethod.DELETE, "/api/class/**/posts/**", "/api/posts/**/comments/**")
-            .authenticated()
-            .antMatchers(HttpMethod.PATCH, "/api/class/**/posts/**").authenticated()
-            .anyRequest().permitAll()
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+        // 보안 설정
+        http.
+            cors().configurationSource(corsConfigurationSource())
             .and()
+            .httpBasic().disable()
+            .csrf().disable()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .addFilterBefore(new JwtFilter(secretKey), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JwtExceptionFilter(), JwtFilter.class)
-            .addFilterBefore(new AccessLoggingFilter(), JwtExceptionFilter.class)
-            .headers().frameOptions().disable()
+            // 인가 설정
+            .authorizeHttpRequests()
+            .antMatchers(HttpMethod.GET, "/api/curriculum/**/posts", "/api/posts/**", "/api/posts/**/comments").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/members/join", "/api/members/login").permitAll()
+            .antMatchers("/h2-console/**").permitAll()
+            .anyRequest().authenticated()
             .and()
-            .build();
+            // JWT 필터 설정
+            .addFilterBefore(new JwtFilter(entryPoint, jwtUtil),
+                UsernamePasswordAuthenticationFilter.class)
+             .addFilterBefore(new AccessLoggingFilter(), JwtFilter.class)
+            .headers().frameOptions().disable() // X-Frame-Options 헤더 비활성화
+            .and()
+            // jwt 에러 처리
+            .exceptionHandling(handler -> handler.authenticationEntryPoint(entryPoint));
+        return http.build();
+    }
+
+    // CORS 관련 설정
+    private CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("http://9oorp.store");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
     }
 }
