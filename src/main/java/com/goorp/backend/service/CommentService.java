@@ -10,16 +10,10 @@ import com.goorp.backend.exception.ErrorCode;
 import com.goorp.backend.repository.CommentRepository;
 import com.goorp.backend.repository.MemberRepository;
 import com.goorp.backend.repository.PostRepository;
-import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -31,9 +25,9 @@ public class CommentService {
 
     // CREATE
     @Transactional
-    public CommentResponseDto createComment(Long postId, CommentRequestDto request, String accountId) {
+    public CommentResponseDto createComment(Long postId, CommentRequestDto commentRequestDto) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.NOT_FOUND_POST,"포스트 ID를 찾을 수 없습니다: " + postId));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
 
         Member member = memberRepository.findByAccountId(accountId)
             .orElseThrow(
@@ -48,7 +42,7 @@ public class CommentService {
     // READ
     public List<CommentResponseDto> getAllComments(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream().map(this::commentResponseDto).collect(Collectors.toList());
+        return comments.stream().map(CommentResponseDto::of).toList();
     }
 
     // DELETE
@@ -77,7 +71,7 @@ public class CommentService {
         if (comment == null) {
             return null;
         }
-        return CommentResponseDto.convertCommentResponseDto(comment);
+        return CommentResponseDto.of(comment);
     }
 }
 

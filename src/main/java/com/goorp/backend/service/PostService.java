@@ -3,8 +3,8 @@ package com.goorp.backend.service;
 import com.goorp.backend.domain.Curriculum;
 import com.goorp.backend.domain.Member;
 import com.goorp.backend.domain.Post;
-import com.goorp.backend.dto.PostRequestDTO;
-import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.dto.PostRequestDto;
+import com.goorp.backend.dto.PostResponseDto;
 import com.goorp.backend.exception.ErrorCode;
 import com.goorp.backend.exception.PostException;
 import com.goorp.backend.repository.CurriculumRepository;
@@ -12,9 +12,6 @@ import com.goorp.backend.repository.MemberRepository;
 import com.goorp.backend.repository.PostRepository;
 import com.goorp.backend.repository.PostSpecification;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +19,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -42,13 +43,14 @@ public class PostService {
 
     // CREATE
     @Transactional
-    public PostResponseDTO createPost(PostRequestDTO requestDTO) {
-        Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
+    public PostResponseDto createPost(PostRequestDto requestDto) {
+        Curriculum curriculum = curriculumRepository.findById(requestDto.getCurriculumId())
             .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " curriculum 이 없습니다."));
 
-        Member member = memberRepository.findByAccountId(requestDTO.getAccountId())
+        Member member = memberRepository.findByAccountId(requestDto.getAccountId())
             .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " memberId 가 없습니다."));
-        Post post = convertToEntity(requestDTO).toBuilder()
+
+        Post post = requestDto.toEntity().toBuilder()
             .curriculum(curriculum)
             .member(member)
             .build();
@@ -60,18 +62,18 @@ public class PostService {
         }
 
         Post savedPost = postRepository.save(post);
-        return convertToResponseDTO(savedPost);
+        return PostResponseDto.of(savedPost);
     }
 
     // READ
-    public PostResponseDTO findPostById(Long postId) {
+    public PostResponseDto findPostById(Long postId) {
         Post post = postRepository.findById(postId)
             .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
-        return convertToResponseDTO(post);
+        return PostResponseDto.of(post);
     }
 
     // READ
-    public List<PostResponseDTO> findAllPostsByCurriculum(
+    public List<PostResponseDto> findAllPostsByCurriculum(
         Long curriculumId,
         int page,
         String classification,
@@ -86,13 +88,13 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Post> postPage = postRepository.findAll(spec, pageable);
         // Convert Post to PostResponseDTO
-        return postPage.getContent().stream().map(this::convertToResponseDTO)
+        return postPage.getContent().stream().map(PostResponseDto::of)
             .collect(Collectors.toList());
     }
 
     // UPDATE
     @Transactional
-    public PostResponseDTO updatePost(Long postId, PostRequestDTO requestDTO) {
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDTO) {
         Post existingPost = postRepository.findById(postId)
             .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
 
@@ -123,7 +125,7 @@ public class PostService {
         }
 
         postRepository.save(updatedPost);
-        return convertToResponseDTO(updatedPost);
+        return PostResponseDto.of(updatedPost);
     }
 
     // DELETE
@@ -144,43 +146,5 @@ public class PostService {
     ) {
         Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub, stack, status, search);
         return postRepository.count(spec);
-    }
-
-    public PostResponseDTO convertToResponseDTO(Post post) {
-        if (post == null) {
-            return null;
-        }
-
-        return new PostResponseDTO(
-            post.getId(),
-            post.getTitle(),
-            post.getContent(),
-            post.getClassification(),
-            post.getSubjects(),
-            post.getStacks(),
-            post.getRecruitNum(),
-            post.getContactUrl(),
-            post.getStatus(),
-            post.getCreatedAt(),
-            post.getUpdatedAt(),
-            post.getCurriculum().getName(),
-            post.getMember().getName(),
-            post.getMember().getAccountId()
-        );
-    }
-
-    private Post convertToEntity(PostRequestDTO requestDTO) {
-        return Post.builder()
-            .title(requestDTO.getTitle())
-            .content(requestDTO.getContent())
-            .classification(requestDTO.getClassification())
-            .subjects(requestDTO.getSubject())
-            .stacks(requestDTO.getStack())
-            .recruitNum(requestDTO.getRecruitNum())
-            .contactUrl(requestDTO.getContactUrl())
-            .status(requestDTO.getStatus())
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .build();
     }
 }

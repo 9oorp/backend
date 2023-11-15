@@ -1,10 +1,8 @@
 package com.goorp.backend.controller;
 
 import com.goorp.backend.dto.ApiResponseDto;
-import com.goorp.backend.dto.PostRequestDTO;
-import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.dto.PostRequestDto;
 import com.goorp.backend.service.PostService;
-import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +29,8 @@ public class PostController {
 
     // CREATE
     @PostMapping("/posts")
-    public ApiResponseDto createPost(@RequestBody PostRequestDTO requestDTO) {
-        PostResponseDTO responseDTO = postService.createPost(requestDTO);
+    public ApiResponseDto createPost(@RequestBody PostRequestDto requestDTO) {
+        PostResponseDto responseDTO = postService.createPost(requestDTO);
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "post 생성 성공", "post", responseDTO))
@@ -42,7 +40,7 @@ public class PostController {
     // READ
     @GetMapping("/posts/{postId}")
     public ApiResponseDto getPostById(@PathVariable Long postId) {
-        PostResponseDTO postResponseDTO = postService.findPostById(postId);
+        PostResponseDto postResponseDTO = postService.findPostById(postId);
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "단일 post 조회 성공", "post", postResponseDTO))
@@ -61,7 +59,7 @@ public class PostController {
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search
     ) {
-        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId,
+        List<PostResponseDto> postResponseDto = postService.findAllPostsByCurriculum(curriculumId,
             page, classification, sort, subject, stack, status, search);
 
         long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,
@@ -71,7 +69,7 @@ public class PostController {
             ApiResponseDto.builder()
                 .ok(true)
                 .data(Map.of("message", "포스트 목록 조회 성공",
-                    "posts", postResponseDTO,
+                    "posts", postResponseDto,
                     "totalCount", totalCount))
                 .build()
         );
@@ -80,8 +78,8 @@ public class PostController {
     // UPDATE
     @PutMapping("/posts/{postId}")
     public ApiResponseDto updatePost(@PathVariable Long postId,
-        @RequestBody PostRequestDTO requestDTO) {
-        PostResponseDTO postResponseDTO = postService.updatePost(postId, requestDTO);
+        @RequestBody PostRequestDto requestDTO) {
+        PostResponseDto postResponseDTO = postService.updatePost(postId, requestDTO);
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "post 업데이트 성공", "post", postResponseDTO))

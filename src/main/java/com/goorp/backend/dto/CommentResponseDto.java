@@ -1,12 +1,11 @@
 package com.goorp.backend.dto;
 
-import java.time.LocalDate;
 import com.goorp.backend.domain.Comment;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-\\\\\\\\\\\\
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -19,7 +18,7 @@ public class CommentResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static CommentResponseDto convertCommentResponseDto(Comment comment) {
+    public static CommentResponseDto of(Comment comment) {
         return new CommentResponseDto(
             comment.getId(),
             comment.getContent(),

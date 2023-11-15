@@ -1,5 +1,6 @@
 package com.goorp.backend.dto;
 
+import com.goorp.backend.domain.Post;
 import com.goorp.backend.domain.vo.Subject;
 import com.goorp.backend.domain.vo.TechStack;
 import java.util.List;
@@ -7,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +16,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class PostRequestDTO {
+public class PostRequestDto {
 
     private String title;
     private String content;
@@ -47,4 +49,18 @@ public class PostRequestDTO {
         return fullStr.split(",");
     }
 
+    public Post toEntity() {
+        return Post.builder()
+                .title(title)
+                .content(content)
+                .classification(classification)
+                .subjects(getSubject())
+                .stacks(getStack())
+                .recruitNum(recruitNum)
+                .contactUrl(contactUrl)
+                .status(status)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+    }
 }
