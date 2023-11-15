@@ -7,9 +7,10 @@ import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.SetJoin;
 import org.springframework.data.jpa.domain.Specification;
 import javax.persistence.criteria.Predicate;
-
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.criteria.Predicate;
+import org.springframework.data.jpa.domain.Specification;
 
 public class PostSpecification {
 
