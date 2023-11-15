@@ -287,3 +287,9 @@ insert into post_stack (post_id, stacks) values
     (28, 'SPRING'),
     (29, 'SPRING'),
     (30, 'TYPESCRIPT');
+
+-- comment
+insert into comment (content, comment_group, depth, created_at, updated_at, post_id, member_id)
+values ('댓글입니다.', 1, 1, '2023-08-07T10:30:15', '2023-08-07T10:30:15', 1,1),
+       ('대댓글입니다.', 1, 2, '2023-08-07T10:31:00', '2023-08-07T10:31:00', 1,1),
+       ('댓글입니다.', 3, 1, '2023-08-07T10:31:20', '2023-08-07T10:31:20', 1,1);

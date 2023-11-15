@@ -2,12 +2,12 @@ package com.goorp.backend.dto;
 
 import com.goorp.backend.domain.vo.Subject;
 import com.goorp.backend.domain.vo.TechStack;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -20,7 +20,7 @@ public class PostRequestDTO {
     private String content;
     private String classification;
     private String subject;
-    private String stack;
+    private String techStack;
     private int recruitNum;
     private String contactUrl;
     private String status;
@@ -35,7 +35,7 @@ public class PostRequestDTO {
     }
 
     public Set<TechStack> getStack() {
-       return Arrays.stream(extract(stack))
+       return Arrays.stream(extract(techStack))
                 .map(String::trim)
                 .map(TechStack::valueOf)
                 .collect(Collectors.toSet());
