@@ -5,15 +5,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.goorp.backend.domain.Post;
-import com.goorp.backend.dto.PostResponseDTO;
+import com.goorp.backend.domain.post.Post;
+import com.goorp.backend.domain.post.model.PostResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 public class PostIntegratedTest extends BaseIntegratedTest {
 
-    private boolean matchesToEntity(PostResponseDTO postResponseDTO, Post post) {
+    private boolean matchesToEntity(PostResponseDto postResponseDTO, Post post) {
         if (postResponseDTO.getId().equals(post.getId())
                 && postResponseDTO.getTitle().equals(post.getTitle())
                 && postResponseDTO.getContent().equals(post.getContent())
@@ -36,7 +36,7 @@ public class PostIntegratedTest extends BaseIntegratedTest {
                 .andDo(print())
                 .andReturn();
 
-        PostResponseDTO postResponseDTO = extractFromResponse(mvcResult, "post", PostResponseDTO.class);
+        PostResponseDto postResponseDTO = extractFromResponse(mvcResult, "post", PostResponseDto.class);
         Post post = postRepository.findById(postId).get();
         assertThat(matchesToEntity(postResponseDTO, post)).isTrue();
     }

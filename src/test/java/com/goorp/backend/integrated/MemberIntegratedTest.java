@@ -4,8 +4,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.goorp.backend.dto.MemberJoinDto;
-import com.goorp.backend.dto.MemberLoginDto;
+import com.goorp.backend.domain.member.model.MemberJoinDto;
+import com.goorp.backend.domain.member.model.MemberLoginDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -67,13 +67,13 @@ class MemberIntegratedTest extends BaseIntegratedTest{
     @Test
     @DisplayName("로그인 성공")
     void login_success() throws Exception {
-        String memberId = "123";
-        String password = "1234";
+        String accountId = "hello1";
+        String password = "123456789!";
 
         mockMvc.perform(post("/api/members/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(new MemberLoginDto(memberId, password))))
+                        .content(objectMapper.writeValueAsBytes(new MemberLoginDto(accountId, password))))
                 .andDo(print())
                 .andExpect(status().isOk());
     }
@@ -81,13 +81,13 @@ class MemberIntegratedTest extends BaseIntegratedTest{
     @Test
     @DisplayName("로그인 실패 - memberId 없음")
     void login_fail1() throws Exception {
-        String memberId = "aaaa";
+        String accountId = "aaaa";
         String password = "hello1";
 
         mockMvc.perform(post("/api/members/login")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(new MemberLoginDto(memberId, password))))
+                        .content(objectMapper.writeValueAsBytes(new MemberLoginDto(accountId, password))))
                 .andDo(print())
 //                .andExpect(status().isNotFound());
                 .andExpect(status().isOk());

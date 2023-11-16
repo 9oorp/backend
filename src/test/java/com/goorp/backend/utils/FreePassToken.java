@@ -1,9 +1,10 @@
 package com.goorp.backend.utils;
 
-import com.goorp.backend.domain.Member;
+import com.goorp.backend.domain.member.Member;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class FreePassToken {
     }
 
     @Test
+    @Disabled
     @DisplayName("프리패스 에세스 토큰 생성하는 테스트입니다.")
     void createFreePassByAccessToken() {
         String freePassToken = jwtUtil.createAccessToken(member, MaxExpireTimeMs);
@@ -42,6 +44,7 @@ public class FreePassToken {
     }
 
     @Test
+    @Disabled
     @DisplayName("프리패스 리프레쉬 토큰 생성하는 테스트입니다.")
     void createFreePassTokenByRefreshToken() {
         String refreshFreePassToken = jwtUtil.createRefreshToken(member, MaxExpireTimeMs);

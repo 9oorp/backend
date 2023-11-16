@@ -1,7 +1,7 @@
 package com.goorp.backend.utils;
 
-import com.goorp.backend.configuration.RoleType;
-import com.goorp.backend.domain.Member;
+import com.goorp.backend.common.enums.RoleType;
+import com.goorp.backend.domain.member.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

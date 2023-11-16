@@ -2,35 +2,17 @@ package com.goorp.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.goorp.backend.domain.Member;
-import com.goorp.backend.domain.Post;
-import com.goorp.backend.dto.CommentRequestDto;
-import com.goorp.backend.repository.CommentRepository;
-import com.goorp.backend.repository.MemberRepository;
-import com.goorp.backend.repository.PostRepository;
+import com.goorp.backend.domain.member.Member;
+import com.goorp.backend.domain.post.Post;
+import com.goorp.backend.domain.comment.model.CommentRequestDto;
+import com.goorp.backend.integrated.BaseIntegratedTest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
-@ActiveProfiles("test")
-@SpringBootTest
-class CommentServiceTest {
-    @Autowired
-    CommentService commentService;
-    @Autowired
-    CommentRepository commentRepository;
-    @Autowired
-    PostRepository  postRepository;
-    @Autowired
-    MemberRepository memberRepository;
-
+class CommentServiceTest extends BaseIntegratedTest {
     @BeforeEach
     void setUp() {
         LocalDateTime now = LocalDateTime.of(2023, 11, 15, 12, 44, 1);
