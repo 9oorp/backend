@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.goorp.backend.domain.Post;
-import com.goorp.backend.dto.PostResponseDto;
+import com.goorp.backend.domain.post.Post;
+import com.goorp.backend.domain.post.model.PostResponseDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;

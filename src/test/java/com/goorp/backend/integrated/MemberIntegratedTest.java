@@ -4,8 +4,8 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.goorp.backend.dto.MemberJoinDto;
-import com.goorp.backend.dto.MemberLoginDto;
+import com.goorp.backend.domain.member.model.MemberJoinDto;
+import com.goorp.backend.domain.member.model.MemberLoginDto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;

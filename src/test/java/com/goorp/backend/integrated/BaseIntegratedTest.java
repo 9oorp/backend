@@ -1,13 +1,13 @@
 package com.goorp.backend.integrated;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.goorp.backend.domain.Member;
-import com.goorp.backend.dto.ApiResponseDto;
-import com.goorp.backend.repository.CommentRepository;
-import com.goorp.backend.repository.MemberRepository;
-import com.goorp.backend.repository.PostRepository;
-import com.goorp.backend.service.CommentService;
-import com.goorp.backend.service.MemberService;
+import com.goorp.backend.domain.member.Member;
+import com.goorp.backend.api.response.ApiResponseDto;
+import com.goorp.backend.domain.comment.CommentRepository;
+import com.goorp.backend.domain.member.MemberRepository;
+import com.goorp.backend.domain.post.PostRepository;
+import com.goorp.backend.domain.comment.CommentService;
+import com.goorp.backend.domain.member.MemberService;
 import com.goorp.backend.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.beans.factory.annotation.Autowired;

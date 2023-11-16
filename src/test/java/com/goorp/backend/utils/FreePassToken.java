@@ -1,6 +1,6 @@
 package com.goorp.backend.utils;
 
-import com.goorp.backend.domain.Member;
+import com.goorp.backend.domain.member.Member;
 import java.time.LocalDate;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

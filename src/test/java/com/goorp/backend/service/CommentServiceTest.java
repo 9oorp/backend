@@ -2,9 +2,9 @@ package com.goorp.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.goorp.backend.domain.Member;
-import com.goorp.backend.domain.Post;
-import com.goorp.backend.dto.CommentRequestDto;
+import com.goorp.backend.domain.member.Member;
+import com.goorp.backend.domain.post.Post;
+import com.goorp.backend.domain.comment.model.CommentRequestDto;
 import com.goorp.backend.integrated.BaseIntegratedTest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

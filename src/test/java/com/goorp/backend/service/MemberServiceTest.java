@@ -2,9 +2,10 @@ package com.goorp.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.goorp.backend.domain.Member;
-import com.goorp.backend.dto.MemberJoinDto;
-import com.goorp.backend.repository.MemberRepository;
+import com.goorp.backend.domain.member.Member;
+import com.goorp.backend.domain.member.MemberService;
+import com.goorp.backend.domain.member.model.MemberJoinDto;
+import com.goorp.backend.domain.member.MemberRepository;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
