@@ -1,4 +1,4 @@
-package com.goorp.backend.domain;
+package com.goorp.backend.domain.post;
 
 import java.time.LocalDateTime;
 import com.goorp.backend.domain.curriculum.Curriculum;
@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import java.util.Set;
 
 @Builder(toBuilder = true)

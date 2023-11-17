@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             "where p.id = :postId")
     Optional<Post> findById(@Param("postId") Long postId);
 
-    @EntityGraph(attributePaths = {"member", "stacks", "subjects"})
+    @EntityGraph(attributePaths = {"member", "stacks", "subjects", "curriculum"})
     Page<Post> findAll(Specification<Post> spec, Pageable pageable);
 
 
