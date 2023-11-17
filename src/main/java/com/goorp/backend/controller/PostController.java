@@ -1,5 +1,6 @@
 package com.goorp.backend.controller;
 
+import com.goorp.backend.dto.AllPostsResponseDTO;
 import com.goorp.backend.dto.ApiResponseDto;
 import com.goorp.backend.dto.PostRequestDTO;
 import com.goorp.backend.dto.PostResponseDTO;
@@ -54,7 +55,7 @@ public class PostController {
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search
     ) {
-        List<PostResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId,
+        List<AllPostsResponseDTO> postResponseDTO = postService.findAllPostsByCurriculum(curriculumId,
             page, classification, sort, stdsub, stack, status, search);
 
         long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,

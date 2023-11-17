@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.goorp.backend.domain.vo.Subject;
 import com.goorp.backend.domain.vo.TechStack;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class Post {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 

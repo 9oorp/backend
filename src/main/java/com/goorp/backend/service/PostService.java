@@ -3,6 +3,7 @@ package com.goorp.backend.service;
 import com.goorp.backend.domain.Curriculum;
 import com.goorp.backend.domain.Member;
 import com.goorp.backend.domain.Post;
+import com.goorp.backend.dto.AllPostsResponseDTO;
 import com.goorp.backend.dto.PostRequestDTO;
 import com.goorp.backend.dto.PostResponseDTO;
 import com.goorp.backend.exception.ErrorCode;
@@ -73,7 +74,7 @@ public class PostService {
     }
 
     // READ
-    public List<PostResponseDTO> findAllPostsByCurriculum(
+    public List<AllPostsResponseDTO> findAllPostsByCurriculum(
         Long curriculumId,
         int page,
         String classification,
@@ -88,7 +89,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Post> postPage = postRepository.findAll(spec, pageable);
         // Convert Post to PostResponseDTO
-        return postPage.getContent().stream().map(this::convertToResponseDTO)
+        return postPage.getContent().stream().map(this::convertToAllPostsResponseDTO)
             .collect(Collectors.toList());
     }
 
@@ -167,8 +168,9 @@ public class PostService {
             post.getUpdatedAt(),
             post.getCurriculum().getName(),
             post.getMember().getName(),
-            post.getMember().getAccountId()
-        );
+            post.getMember().getAccountId(),
+            post.getComments()
+                );
     }
 
     private Post convertToEntity(PostRequestDTO requestDTO) {
@@ -184,5 +186,23 @@ public class PostService {
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
             .build();
+    }
+    private AllPostsResponseDTO convertToAllPostsResponseDTO(Post post) {
+        if (post == null) {
+            return null;
+        }
+
+        return new AllPostsResponseDTO(
+                post.getId(),
+                post.getTitle(),
+                post.getSubjects(),
+                post.getStacks(),
+                post.getStatus(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
+                post.getMember().getName(),
+                post.getMember().getAccountId(),
+                post.getComments().size()
+        );
     }
 }
