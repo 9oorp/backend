@@ -1,9 +1,9 @@
 package com.goorp.backend.domain.post;
 
 import com.goorp.backend.api.response.ApiResponseDto;
+import com.goorp.backend.domain.post.model.AllPostResponseDto;
 import com.goorp.backend.domain.post.model.PostRequestDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
-
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,7 +61,7 @@ public class PostController {
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search
     ) {
-        List<PostResponseDto> postResponseDto = postService.findAllPostsByCurriculum(curriculumId,
+        List<AllPostResponseDto> postResponseDto = postService.findAllPostsByCurriculum(curriculumId,
             page, classification, sort, subject, stack, status, search);
 
         long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,

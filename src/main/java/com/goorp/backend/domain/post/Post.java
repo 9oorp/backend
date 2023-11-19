@@ -1,13 +1,11 @@
 package com.goorp.backend.domain.post;
 
 import java.time.LocalDateTime;
-
 import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.comment.Comment;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,8 +24,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 import java.util.Set;
-
 
 @Builder(toBuilder = true)
 @Getter
@@ -81,6 +79,7 @@ public class Post {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
+    @BatchSize(size = 100)
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 

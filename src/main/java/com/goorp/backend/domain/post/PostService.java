@@ -4,11 +4,11 @@ import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.model.PostRequestDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
+import com.goorp.backend.domain.post.model.AllPostResponseDto;
 import com.goorp.backend.api.exception.ErrorCode;
 import com.goorp.backend.api.exception.PostException;
 import com.goorp.backend.domain.curriculum.CurriculumRepository;
 import com.goorp.backend.domain.member.MemberRepository;
-
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,10 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -71,7 +69,7 @@ public class PostService {
     }
 
     // READ
-    public List<PostResponseDto> findAllPostsByCurriculum(
+    public List<AllPostResponseDto> findAllPostsByCurriculum(
         Long curriculumId,
         int page,
         String classification,
@@ -86,7 +84,7 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Post> postPage = postRepository.findAll(spec, pageable);
         // Convert Post to PostResponseDTO
-        return postPage.getContent().stream().map(PostResponseDto::of)
+        return postPage.getContent().stream().map(AllPostResponseDto::of)
             .collect(Collectors.toList());
     }
 
