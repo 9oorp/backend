@@ -82,7 +82,7 @@ public class PostService {
         Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
             stack, status, search);
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
-        Page<Post> postPage = postRepository.findAll(spec, pageable);
+        Page<Post> postPage = postRepository.findAll(curriculumId, classification, sort, stdsub, stack, status, search, pageable);
         // Convert Post to PostResponseDTO
         return postPage.getContent().stream().map(AllPostResponseDto::of)
             .collect(Collectors.toList());
