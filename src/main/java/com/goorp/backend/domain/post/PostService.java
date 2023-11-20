@@ -74,12 +74,12 @@ public class PostService {
         int page,
         String classification,
         String sort,
-        String stdsub,
+        String subject,
         String stack,
         String status,
         String search
     ) {
-        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
+        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, subject,
             stack, status, search);
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Post> postPage = postRepository.findAll(spec, pageable);
