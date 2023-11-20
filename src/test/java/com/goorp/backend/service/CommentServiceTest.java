@@ -43,22 +43,20 @@ class CommentServiceTest extends BaseIntegratedTest {
     @Test
     void createComment() {
         // given
-        CommentRequestDto commentRequestDto = new CommentRequestDto("댓글", 0);
+        CommentRequestDto commentRequestDto = new CommentRequestDto("댓글", null);
         // when
         commentService.createComment(1L, commentRequestDto, "memberAccountId");
         // then
         assertThat(commentRepository.findByPostId(1L)).hasSize(1);
         assertThat(commentRepository.findByPostId(1L).get(0).getContent()).isEqualTo("댓글");
-        assertThat(commentRepository.findByPostId(1L).get(0).getCommentGroup()).isEqualTo(1);
-        assertThat(commentRepository.findByPostId(1L).get(0).getDepth()).isEqualTo(1);
     }
 
     @DisplayName("부모가 있는 댓글을 생성한다.")
     @Test
     void createReplyComment() {
         // given
-        CommentRequestDto commentRequestDto1 = new CommentRequestDto("댓글", 0);
-        CommentRequestDto commentRequestDto2 = new CommentRequestDto("대댓글", 1);
+        CommentRequestDto commentRequestDto1 = new CommentRequestDto("댓글", null);
+        CommentRequestDto commentRequestDto2 = new CommentRequestDto("대댓글", 1L);
         // when
         commentService.createComment(1L, commentRequestDto1, "memberAccountId");
         commentService.createComment(1L, commentRequestDto2, "memberAccountId");
@@ -66,6 +64,5 @@ class CommentServiceTest extends BaseIntegratedTest {
         assertThat(commentRepository.findByPostId(1L)).hasSize(2);
         assertThat(commentRepository.findByPostId(1L).get(0).getContent()).isEqualTo("댓글");
         assertThat(commentRepository.findByPostId(1L).get(1).getContent()).isEqualTo("대댓글");
-        assertThat(commentRepository.findByPostId(1L).get(1).getDepth()).isEqualTo(2);
     }
 }
