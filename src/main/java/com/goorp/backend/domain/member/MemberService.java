@@ -1,5 +1,8 @@
 package com.goorp.backend.domain.member;
 
+import com.goorp.backend.api.exception.EntityNotFoundException;
+import com.goorp.backend.domain.member.exception.AccountIdAlreadyExistException;
+import com.goorp.backend.domain.member.exception.ConfirmPasswordNotMatchException;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.domain.member.model.MemberJoinDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
@@ -37,10 +40,10 @@ public class MemberService {
     public void join(MemberJoinDto dto) {
         // memberId 중복 체크
         String accountId = dto.getAccountId();
-        memberRepository.findByAccountId(accountId)
-            .ifPresent(member -> {
-                throw new MemberException(ErrorCode.ID_DUPLICATED, accountId + " 이미 존재 합니다.");
-            });
+        if(memberRepository.existsByAccountId(accountId)) {
+            throw new AccountIdAlreadyExistException();
+        }
+
         // password 확인
         if (!dto.getPassword().equals(dto.getPasswordConfirm())) {
             throw new MemberException(ErrorCode.PASSWORD_NOT_SAME,
@@ -53,11 +56,10 @@ public class MemberService {
 
     public Map<String, String> login(String accountId, String password) {
         // memberId 없음
-        Member findMember = memberRepository.findByAccountId(accountId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, "ID가 틀립니다."));
+        Member findMember = findMemberByAccountId(accountId);
         // password 틀림
         if (!encoder.matches(password, findMember.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
+            throw new ConfirmPasswordNotMatchException();
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
         String accessToken =jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
@@ -70,9 +72,7 @@ public class MemberService {
     }
 
     public String refreshToAccessToken(Long memberId) {
-        Member findMember = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, memberId + " 멤버가 존재하지 않습니다."));
-
+        Member findMember = findMember(memberId);
         return jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
     }
 
@@ -92,5 +92,15 @@ public class MemberService {
         return findAllPost.stream()
             .map(PostResponseDto::of)
             .collect(Collectors.toList());
+    }
+
+    private Member findMemberByAccountId(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+            .orElseThrow(() -> new EntityNotFoundException(Member.class, accountId));
+    }
+
+    private Member findMember(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Member.class, id));
     }
 }
