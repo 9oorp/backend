@@ -6,8 +6,6 @@ import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.model.PostRequestDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
 import com.goorp.backend.domain.post.model.AllPostResponseDto;
-import com.goorp.backend.api.exception.ErrorCode;
-import com.goorp.backend.api.exception.PostException;
 import com.goorp.backend.domain.curriculum.CurriculumRepository;
 import com.goorp.backend.domain.member.MemberRepository;
 import java.time.LocalDateTime;
