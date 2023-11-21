@@ -10,7 +10,7 @@ import com.goorp.backend.api.exception.PostException;
 import com.goorp.backend.domain.curriculum.CurriculumRepository;
 import com.goorp.backend.domain.member.MemberRepository;
 import java.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,19 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional(readOnly = true)
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final CurriculumRepository curriculumRepository;
     private final MemberRepository memberRepository;
-
-    @Autowired
-    public PostService(PostRepository postRepository, CurriculumRepository curriculumRepository,
-        MemberRepository memberRepository) {
-        this.postRepository = postRepository;
-        this.curriculumRepository = curriculumRepository;
-        this.memberRepository = memberRepository;
-    }
 
     // CREATE
     @Transactional
