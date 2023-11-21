@@ -112,9 +112,11 @@ public class PostService {
     // DELETE
     @Transactional
     public void deletePost(Long postId) {
-        postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
-        postRepository.deleteById(postId);
+        if(postRepository.existsById(postId)) {
+            postRepository.deleteById(postId);
+        } else {
+            throw new EntityNotFoundException(Post.class, postId);
+        }
     }
 
     public long countAllPostsByCurriculum(
