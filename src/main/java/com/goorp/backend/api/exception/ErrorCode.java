@@ -19,7 +19,8 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, ""),
     NOT_FOUND_MEMBER(HttpStatus.NOT_FOUND, ""),
     NOT_FOUND_POST(HttpStatus.NOT_FOUND, ""),
-    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, "");
+    NOT_FOUND_COMMENT(HttpStatus.NOT_FOUND, ""),
+    ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "");
 
     private HttpStatus httpStatus;
     private String message;
