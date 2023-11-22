@@ -25,7 +25,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto request, String accountId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.NOT_FOUND_POST, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "postId 가 없습니다."));
 
         Member member = memberRepository.findByAccountId(accountId)
             .orElseThrow(
@@ -34,7 +34,7 @@ public class CommentService {
         Comment parentComment = null;
         if (request.getParentCommentId() != null) {
             parentComment = commentRepository.findById(request.getParentCommentId())
-                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "parentCommentId 가 없습니다."));
+                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "parentCommentId 가 없습니다."));
 
             if (parentComment.getParentComment() != null) {
                 throw new CommentException(ErrorCode.NESTED_REPLY_EXCEPTION, "대댓글의 댓글은 허용되지 않습니다.");
@@ -59,9 +59,9 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long postId, Long commentId) {
         postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "postId 가 없습니다."));
         commentRepository.findById(commentId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "commentId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "commentId 가 없습니다."));
         commentRepository.deleteById(commentId);
     }
 }
