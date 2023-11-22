@@ -40,11 +40,8 @@ public class PostService {
     // CREATE
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto) {
-        Curriculum curriculum = curriculumRepository.findById(requestDto.getCurriculumId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, " curriculum 이 없습니다."));
-
-        Member member = memberRepository.findByAccountId(requestDto.getAccountId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, " memberId 가 없습니다."));
+        Curriculum curriculum = findCurriculum(requestDto.getCurriculumId());
+        Member member = findMember(requestDto.getAccountId());
 
         Post post = requestDto.toEntity().toBuilder()
             .curriculum(curriculum)
@@ -63,8 +60,7 @@ public class PostService {
 
     // READ
     public PostResponseDto findPostById(Long postId) {
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, postId + " 가 없습니다."));
+        Post post = findPost(postId);
         return PostResponseDto.of(post);
     }
 
@@ -91,14 +87,9 @@ public class PostService {
     // UPDATE
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDTO) {
-        Post existingPost = postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, postId + " 가 없습니다."));
-
-        Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, "curriculumId 가 없습니다."));
-
-        Member member = memberRepository.findByAccountId(requestDTO.getAccountId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, "memberId 가 없습니다."));
+        Post existingPost = findPost(postId);
+        Curriculum curriculum = findCurriculum(requestDTO.getCurriculumId());
+        Member member = findMember(requestDTO.getAccountId());
 
         Post updatedPost = existingPost.toBuilder()
             .title(requestDTO.getTitle())
@@ -127,8 +118,7 @@ public class PostService {
     // DELETE
     @Transactional
     public void deletePost(Long postId) {
-        postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, postId + " 가 없습니다."));
+        findPost(postId);
         postRepository.deleteById(postId);
     }
 
@@ -142,5 +132,20 @@ public class PostService {
     ) {
         Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub, stack, status, search);
         return postRepository.count(spec);
+    }
+
+    private Post findPost(Long id) {
+        return postRepository.findById(id)
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
+    }
+
+    private Member findMember(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, accountId + " 가 없습니다."));
+    }
+
+    private Curriculum findCurriculum(Long id) {
+        return curriculumRepository.findById(id)
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
     }
 }
