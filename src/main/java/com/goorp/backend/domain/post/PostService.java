@@ -1,5 +1,6 @@
 package com.goorp.backend.domain.post;
 
+import com.goorp.backend.api.exception.EntityNotFoundException;
 import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.model.PostRequestDto;
@@ -129,16 +130,16 @@ public class PostService {
 
     private Post findPost(Long id) {
         return postRepository.findById(id)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(Post.class, id));
     }
 
     private Member findMember(String accountId) {
         return memberRepository.findByAccountId(accountId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, accountId + " 가 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(Member.class, accountId));
     }
 
     private Curriculum findCurriculum(Long id) {
         return curriculumRepository.findById(id)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
+            .orElseThrow(() -> new EntityNotFoundException(Curriculum.class, id));
     }
 }
