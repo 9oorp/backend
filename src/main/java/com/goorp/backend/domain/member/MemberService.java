@@ -2,6 +2,7 @@ package com.goorp.backend.domain.member;
 
 import com.goorp.backend.api.exception.EntityNotFoundException;
 import com.goorp.backend.domain.member.exception.ConfirmPasswordNotMatchException;
+import com.goorp.backend.domain.member.exception.InvalidPasswordException;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.domain.member.model.MemberJoinDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
@@ -57,7 +58,7 @@ public class MemberService {
         Member findMember = findMember(accountId);
         // password 틀림
         if (!encoder.matches(password, findMember.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
+            throw new InvalidPasswordException();
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
         String accessToken =jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
