@@ -41,10 +41,10 @@ public class PostService {
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto) {
         Curriculum curriculum = curriculumRepository.findById(requestDto.getCurriculumId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " curriculum 이 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, " curriculum 이 없습니다."));
 
         Member member = memberRepository.findByAccountId(requestDto.getAccountId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " memberId 가 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, " memberId 가 없습니다."));
 
         Post post = requestDto.toEntity().toBuilder()
             .curriculum(curriculum)
@@ -64,7 +64,7 @@ public class PostService {
     // READ
     public PostResponseDto findPostById(Long postId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, postId + " 가 없습니다."));
         return PostResponseDto.of(post);
     }
 
@@ -92,13 +92,13 @@ public class PostService {
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDTO) {
         Post existingPost = postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, postId + " 가 없습니다."));
 
         Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "curriculumId 가 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, "curriculumId 가 없습니다."));
 
         Member member = memberRepository.findByAccountId(requestDTO.getAccountId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "memberId 가 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, "memberId 가 없습니다."));
 
         Post updatedPost = existingPost.toBuilder()
             .title(requestDTO.getTitle())
@@ -128,7 +128,7 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId) {
         postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
+            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, postId + " 가 없습니다."));
         postRepository.deleteById(postId);
     }
 

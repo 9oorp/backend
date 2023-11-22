@@ -25,7 +25,7 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto request, String accountId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "postId 가 없습니다."));
 
         Member member = memberRepository.findByAccountId(accountId)
             .orElseThrow(
@@ -47,9 +47,9 @@ public class CommentService {
     @Transactional
     public void deleteComment(Long postId, Long commentId) {
         postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "postId 가 없습니다."));
         commentRepository.findById(commentId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "commentId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "commentId 가 없습니다."));
         commentRepository.deleteById(commentId);
     }
 

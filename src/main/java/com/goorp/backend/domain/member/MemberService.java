@@ -54,7 +54,7 @@ public class MemberService {
     public Map<String, String> login(String accountId, String password) {
         // memberId 없음
         Member findMember = memberRepository.findByAccountId(accountId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, "ID가 틀립니다."));
+            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUND, "ID가 틀립니다."));
         // password 틀림
         if (!encoder.matches(password, findMember.getPassword())) {
             throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
@@ -71,7 +71,7 @@ public class MemberService {
 
     public String refreshToAccessToken(Long memberId) {
         Member findMember = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, memberId + " 멤버가 존재하지 않습니다."));
+            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUND, memberId + " 멤버가 존재하지 않습니다."));
 
         return jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
     }
@@ -81,7 +81,7 @@ public class MemberService {
 
         // 멤버 검색
         if(!memberRepository.existsByAccountId(accountId)) {
-            throw new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 가 존재하지 않습니다.");
+            throw new MemberException(ErrorCode.ID_NOT_FOUND, accountId + " 가 존재하지 않습니다.");
         }
 
         // 게시물 검색
