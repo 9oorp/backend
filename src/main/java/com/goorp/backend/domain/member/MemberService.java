@@ -1,6 +1,7 @@
 package com.goorp.backend.domain.member;
 
 import com.goorp.backend.api.exception.EntityNotFoundException;
+import com.goorp.backend.domain.member.exception.ConfirmPasswordNotMatchException;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.domain.member.model.MemberJoinDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
@@ -44,8 +45,7 @@ public class MemberService {
             });
         // password 확인
         if (!dto.getPassword().equals(dto.getPasswordConfirm())) {
-            throw new MemberException(ErrorCode.PASSWORD_NOT_SAME,
-                "passwordConfirm이 password와 다릅니다!");
+            throw new ConfirmPasswordNotMatchException();
         }
         dto.setEncodingPassword(encoder.encode(dto.getPassword()));
 
