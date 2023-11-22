@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     ID_DUPLICATED(HttpStatus.CONFLICT, ""),
-    ID_NOT_FOUNT(HttpStatus.NOT_FOUND, ""),
+    ID_NOT_FOUND(HttpStatus.NOT_FOUND, ""),
     PASSWORD_NOT_SAME(HttpStatus.UNAUTHORIZED, ""),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, ""),
     ACCESS_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, ""),
