@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class ExceptionManager {
 
+    @ExceptionHandler(DomainException.class)
+    public ApiErrorResponseDto domainExceptionHandler(DomainException e) {
+        return ApiErrorResponseDto.builder()
+                .ok(false)
+                .errorMessage(e.getMessage())
+                .build();
+    }
+
     @ExceptionHandler
     public ApiErrorResponseDto runtimeExceptionHandler(MemberException e) {
         return ApiErrorResponseDto.builder()
