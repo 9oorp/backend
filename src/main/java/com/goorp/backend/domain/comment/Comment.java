@@ -1,5 +1,6 @@
 package com.goorp.backend.domain.comment;
 
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,9 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import java.time.LocalDateTime;
-
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.Post;
+import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,14 +32,17 @@ public class Comment {
     private Long id;
     @Column(nullable = false)
     private String content;
-    @Column
-    private int commentGroup;
-    @Column
-    private int depth;
     @Column(nullable = false)
     private LocalDateTime createdAt;
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PARENT_COMMENT_ID")
+    private Comment parentComment;
+
+    @OneToMany(mappedBy = "parentComment", fetch = FetchType.LAZY)
+    private List<Comment> replies;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID")
@@ -48,33 +52,18 @@ public class Comment {
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
-    public static Comment createComment(String content, Member member, Post post) {
+    public static Comment createComment(String content, Member member, Post post, Comment parent) {
         return Comment.builder()
             .content(content)
-            .commentGroup(0)
-            .depth(1)
+            .parentComment(parent)
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now())
+            .parentComment(parent)  // null 이면 댓글
             .member(member)
             .post(post)
             .build();
     }
-
-    public static Comment replyToComment(String content, Member member, Post post, Comment parent) {
-        return Comment.builder()
-            .content(content)
-            .commentGroup(parent.getCommentGroup())
-            .depth(2)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .member(member)
-            .post(post)
-            .build();
-    }
-
-    public void updateCommentGroup() {
-        if (this.commentGroup == 0) {
-            this.commentGroup = this.id.intValue();
-        }
+    public boolean isReply() {
+        return this.parentComment != null;
     }
 }
