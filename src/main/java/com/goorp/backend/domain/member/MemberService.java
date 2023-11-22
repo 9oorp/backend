@@ -80,7 +80,7 @@ public class MemberService {
 
         // 멤버 검색
         if(!memberRepository.existsByAccountId(accountId)) {
-            throw new MemberException(ErrorCode.ID_NOT_FOUND, accountId + " 가 존재하지 않습니다.");
+            throw new EntityNotFoundException(Member.class, accountId);
         }
 
         // 게시물 검색
