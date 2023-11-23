@@ -1,6 +1,9 @@
 package com.goorp.backend.domain.post.model;
 
 import java.time.LocalDateTime;
+
+import com.goorp.backend.common.enums.Classification;
+import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
@@ -17,12 +20,12 @@ public class PostResponseDto {
     private Long id;
     private String title;
     private String content;
-    private String classification;
+    private Classification classification;
     private Set<Subject> subject;
     private Set<TechStack> stack;
     private int recruitNum;
     private String contactUrl;
-    private String status;
+    private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String curriculumName;

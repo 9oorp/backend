@@ -1,5 +1,7 @@
 package com.goorp.backend.domain.post;
 
+import com.goorp.backend.common.enums.Classification;
+import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.model.PostRequestDto;
@@ -51,11 +53,11 @@ public class PostService {
             .member(member)
             .build();
 
-        if (post.getStatus().equals("모집중")) {
-            post.changeStatus("0");
-        } else if (post.getStatus().equals("모집종료")) {
-            post.changeStatus("1");
-        }
+//        if (post.getStatus().equals("모집중")) {
+//            post.changeStatus("0");
+//        } else if (post.getStatus().equals("모집종료")) {
+//            post.changeStatus("1");
+//        }
 
         Post savedPost = postRepository.save(post);
         return PostResponseDto.of(savedPost);
@@ -79,8 +81,10 @@ public class PostService {
         String status,
         String search
     ) {
-        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
-            stack, status, search);
+//        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
+//            stack, status, search);
+//        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
+//                stack, status, search);
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
         Page<Post> postPage = postRepository.findAll(curriculumId, classification, sort, stdsub, stack, status, search, pageable);
         // Convert Post to PostResponseDTO
@@ -114,11 +118,11 @@ public class PostService {
             .updatedAt(LocalDateTime.now())
             .build();
 
-        if (updatedPost.getStatus().equals("모집중")) {
-            updatedPost.changeStatus("0");
-        } else if (updatedPost.getStatus().equals("모집종료")) {
-            updatedPost.changeStatus("1");
-        }
+//        if (updatedPost.getStatus().equals("모집중")) {
+//            updatedPost.changeStatus("0");
+//        } else if (updatedPost.getStatus().equals("모집종료")) {
+//            updatedPost.changeStatus("1");
+//        }
 
         postRepository.save(updatedPost);
         return PostResponseDto.of(updatedPost);

@@ -1,6 +1,9 @@
 package com.goorp.backend.domain.post;
 
 import java.time.LocalDateTime;
+
+import com.goorp.backend.common.enums.Classification;
+import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.comment.Comment;
 import com.goorp.backend.domain.member.Member;
@@ -43,8 +46,6 @@ public class Post {
     @Lob
     @Column(nullable = false)
     private String content;
-    @Column(nullable = false)
-    private String classification;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(
@@ -61,11 +62,16 @@ public class Post {
     )
     @Enumerated(EnumType.STRING)
     private Set<TechStack> stacks = new HashSet<>();
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private Classification classification;
+
     @Column(nullable = false)
     private int recruitNum;
     private String contactUrl;
-    @Column(nullable = false)
-    private String status;
     @Column(nullable = false)
     private LocalDateTime createdAt;
     @Column(nullable = false)
@@ -83,7 +89,7 @@ public class Post {
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
 
-    public void changeStatus(String newStatus) {
+    public void changeStatus(Status newStatus) {
         this.status = newStatus;
     }
 
