@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,12 +41,6 @@ public class PostService {
             .member(member)
             .build();
 
-        if (post.getStatus().equals("모집중")) {
-            post.changeStatus("0");
-        } else if (post.getStatus().equals("모집종료")) {
-            post.changeStatus("1");
-        }
-
         Post savedPost = postRepository.save(post);
         return PostResponseDto.of(savedPost);
     }
@@ -63,17 +56,13 @@ public class PostService {
         Long curriculumId,
         int page,
         String classification,
-        String sort,
         String subject,
-        String stack,
+        String techStack,
         String status,
         String search
     ) {
-        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, subject,
-            stack, status, search);
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
-        Page<Post> postPage = postRepository.findAll(spec, pageable);
-        // Convert Post to PostResponseDTO
+        Page<Post> postPage = postRepository.findAll(curriculumId, classification, subject, techStack, status, search, pageable);
         return postPage.getContent().stream().map(AllPostResponseDto::of)
             .collect(Collectors.toList());
     }
@@ -99,12 +88,6 @@ public class PostService {
             .updatedAt(LocalDateTime.now())
             .build();
 
-        if (updatedPost.getStatus().equals("모집중")) {
-            updatedPost.changeStatus("0");
-        } else if (updatedPost.getStatus().equals("모집종료")) {
-            updatedPost.changeStatus("1");
-        }
-
         postRepository.save(updatedPost);
         return PostResponseDto.of(updatedPost);
     }
@@ -116,30 +99,18 @@ public class PostService {
         postRepository.deleteById(postId);
     }
 
-    public long countAllPostsByCurriculum(
-        Long curriculumId,
-        String classification,
-        String stdsub,
-        String stack,
-        String status,
-        String search
-    ) {
-        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub, stack, status, search);
-        return postRepository.count(spec);
-    }
-
     private Post findPost(Long id) {
         return postRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(Post.class, id));
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
     }
 
     private Member findMember(String accountId) {
         return memberRepository.findByAccountId(accountId)
-            .orElseThrow(() -> new EntityNotFoundException(Member.class, accountId));
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, accountId + " 가 없습니다."));
     }
 
     private Curriculum findCurriculum(Long id) {
         return curriculumRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(Curriculum.class, id));
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
     }
 }

@@ -1,5 +1,6 @@
 package com.goorp.backend.domain.post.model;
 
+import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
 import com.goorp.backend.domain.post.Post;
@@ -17,8 +18,8 @@ public class AllPostResponseDto {
     private Long id;
     private String title;
     private Set<Subject> subject;
-    private Set<TechStack> stack;
-    private String status;
+    private Set<TechStack> techStack;
+    private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String memberName;

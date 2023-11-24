@@ -1,5 +1,7 @@
 package com.goorp.backend.domain.post.model;
 
+import com.goorp.backend.common.enums.Classification;
+import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
@@ -47,16 +49,24 @@ public class PostRequestDto {
         return fullStr.split(",");
     }
 
+    public Classification getClassification(){
+        return Classification.valueOf(classification);
+    }
+
+    public Status getStatus(){
+        return Status.valueOf(status);
+    }
+
     public Post toEntity() {
         return Post.builder()
                 .title(title)
                 .content(content)
-                .classification(classification)
+                .classification(getClassification())
                 .subjects(getSubject())
                 .stacks(getStack())
                 .recruitNum(recruitNum)
                 .contactUrl(contactUrl)
-                .status(status)
+                .status(getStatus())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
