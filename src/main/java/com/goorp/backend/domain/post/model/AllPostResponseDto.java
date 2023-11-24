@@ -18,7 +18,7 @@ public class AllPostResponseDto {
     private Long id;
     private String title;
     private Set<Subject> subject;
-    private Set<TechStack> stack;
+    private Set<TechStack> techStack;
     private Status status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

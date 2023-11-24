@@ -88,9 +88,4 @@ public class Post {
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
-
-    public void changeStatus(Status newStatus) {
-        this.status = newStatus;
-    }
-
 }

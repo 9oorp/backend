@@ -1,7 +1,5 @@
 package com.goorp.backend.domain.post;
 
-import com.goorp.backend.common.enums.Classification;
-import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.model.PostRequestDto;
@@ -17,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -53,12 +50,6 @@ public class PostService {
             .member(member)
             .build();
 
-//        if (post.getStatus().equals("모집중")) {
-//            post.changeStatus("0");
-//        } else if (post.getStatus().equals("모집종료")) {
-//            post.changeStatus("1");
-//        }
-
         Post savedPost = postRepository.save(post);
         return PostResponseDto.of(savedPost);
     }
@@ -75,19 +66,13 @@ public class PostService {
         Long curriculumId,
         int page,
         String classification,
-        String sort,
-        String stdsub,
-        String stack,
+        String subject,
+        String techStack,
         String status,
         String search
     ) {
-//        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
-//            stack, status, search);
-//        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub,
-//                stack, status, search);
         Pageable pageable = PageRequest.of(page, 20, Sort.by(Sort.Direction.DESC, "updatedAt"));
-        Page<Post> postPage = postRepository.findAll(curriculumId, classification, sort, stdsub, stack, status, search, pageable);
-        // Convert Post to PostResponseDTO
+        Page<Post> postPage = postRepository.findAll(curriculumId, classification, subject, techStack, status, search, pageable);
         return postPage.getContent().stream().map(AllPostResponseDto::of)
             .collect(Collectors.toList());
     }
@@ -118,12 +103,6 @@ public class PostService {
             .updatedAt(LocalDateTime.now())
             .build();
 
-//        if (updatedPost.getStatus().equals("모집중")) {
-//            updatedPost.changeStatus("0");
-//        } else if (updatedPost.getStatus().equals("모집종료")) {
-//            updatedPost.changeStatus("1");
-//        }
-
         postRepository.save(updatedPost);
         return PostResponseDto.of(updatedPost);
     }
@@ -134,17 +113,5 @@ public class PostService {
         postRepository.findById(postId)
             .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
         postRepository.deleteById(postId);
-    }
-
-    public long countAllPostsByCurriculum(
-        Long curriculumId,
-        String classification,
-        String stdsub,
-        String stack,
-        String status,
-        String search
-    ) {
-        Specification<Post> spec = PostSpecification.filter(curriculumId, classification, stdsub, stack, status, search);
-        return postRepository.count(spec);
     }
 }

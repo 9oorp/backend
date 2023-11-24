@@ -1,19 +1,16 @@
 package com.goorp.backend.domain.post;
 
+import com.goorp.backend.common.enums.Classification;
 import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
-import com.goorp.backend.domain.member.Member;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryResults;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -44,14 +41,6 @@ public class PostRepository {
         return jpaPostRepository.findById(id);
     }
 
-    public long count(Specification<Post> spec) {
-        return jpaPostRepository.count(spec);
-    }
-
-    public Page<Post> findAll(Specification<Post> spec, Pageable pageable) {
-        return jpaPostRepository.findAll(spec, pageable);
-    }
-
     public Page<Post> findByMemberAccountId(String accountId, PageRequest pageRequest) {
         return jpaPostRepository.findByMemberAccountId(accountId, pageRequest);
     }
@@ -59,75 +48,30 @@ public class PostRepository {
     public Page<Post> findAll(
             Long curriculumId,
             String classification,
-            String sort,
             String subject,
             String techStack,
             String status,
             String search,
             Pageable pageable) {
-
-        BooleanBuilder builder = new BooleanBuilder(); // Querydsl 조건 빌더
-//
-//        // curriculumId 조건
-//        if (curriculumId != null && curriculumId != 0) {
-//            builder.and(post.curriculum.id.eq(curriculumId));
-//        }
-//
-//        // classification 조건
-//        if (classification != null) {
-//            builder.and(post.classification.eq(classification));
-//        }
-//
-//        // subject 조건
-//        if (subject != null) {
-//            Subject subjectEnum = Subject.valueOf(subject.toUpperCase());
-//            builder.and(post.subjects.contains(subjectEnum));
-//        }
-//
-//        // techStack 조건
-//        if (techStack != null) {
-//            TechStack stackEnum = TechStack.valueOf(techStack.toUpperCase());
-//            builder.and(post.stacks.contains(stackEnum));
-//        }
-//
-//        // status 조건
-//        if (status != null) {
-//            if ("1".equals(status)) {
-//                builder.and(post.status.eq("0").or(post.status.eq("1")));
-//            } else {
-//                builder.and(post.status.eq(status));
-//            }
-//        }
-//
-//        // search 조건
-//        if (search != null) {
-//            builder.and(post.title.containsIgnoreCase(search)
-//                    .or(post.content.containsIgnoreCase(search)));
-//        }
-
-        //if 모양 더 확인하기.
-        //메소드로 만드는 것 필요한지.
-
-        QueryResults<Post> queryResults = queryFactory
+        BooleanBuilder builder = new BooleanBuilder();
+        List<Post> content = queryFactory
                 .selectFrom(post)
-                .leftJoin(post.member, member)
-                .fetchJoin()
-                .leftJoin(post.curriculum, curriculum)
-                .fetchJoin()
-                .leftJoin(post.stacks)
-                .fetchJoin()
-                .leftJoin(post.subjects)
-                .fetchJoin()
-                .where(eqCurriculum(builder, curriculumId), eqClassification(builder, classification), eqSubject(builder, subject), eqTechStack(builder, techStack), eqStatus(builder, Status.valueOf(status)), eqSearch(builder, search))
+                .leftJoin(post.member, member).fetchJoin()
+                .leftJoin(post.curriculum, curriculum).fetchJoin()
+                .leftJoin(post.stacks).fetchJoin()
+                .leftJoin(post.subjects).fetchJoin()
+                .where(
+                        eqCurriculum(builder, curriculumId),
+                        eqClassification(builder, classification),
+                        eqSubject(builder, subject),
+                        eqTechStack(builder, techStack),
+                        eqStatus(builder, status),
+                        eqSearch(builder, search)
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
-                .fetchResults();
-
-        List<Post> content = queryResults.getResults();
-        long total = queryResults.getTotal();
-        Page<Post> result = new PageImpl<>(content, pageable, total);
-
-        return result;
+                .fetch();
+        return new PageImpl<>(content, pageable, content.size());
     }
 
     private BooleanBuilder eqCurriculum(BooleanBuilder builder, Long curriculumId) {
@@ -139,7 +83,8 @@ public class PostRepository {
 
     private BooleanBuilder eqClassification(BooleanBuilder builder, String classification) {
         if (classification != null) {
-            builder.and(post.classification.eq(classification));
+            Classification classificationEnum = Classification.valueOf(classification.toUpperCase());
+            builder.and(post.classification.eq(classificationEnum));
         }
         return builder;
     }
@@ -160,13 +105,14 @@ public class PostRepository {
         return builder;
     }
 
-    private BooleanBuilder eqStatus(BooleanBuilder builder, Status status) {
+    private BooleanBuilder eqStatus(BooleanBuilder builder, String status) {
         if (status != null) {
-            if (Status.COMPLETED.equals(status)) {
-                builder.and(post.status.eq(String.valueOf(Status.RECRUITING))
-                        .or(post.status.eq(String.valueOf(Status.COMPLETED))));
+            Status statusEnum = Status.valueOf(status.toUpperCase());
+            if (Status.COMPLETED.equals(statusEnum)) {
+                builder.and(post.status.eq(Status.RECRUITING)
+                        .or(post.status.eq(Status.COMPLETED)));
             } else {
-                builder.and(post.status.eq(String.valueOf(status)));
+                builder.and(post.status.eq(statusEnum));
             }
         }
         return builder;

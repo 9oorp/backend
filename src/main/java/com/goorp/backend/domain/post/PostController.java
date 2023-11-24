@@ -55,24 +55,23 @@ public class PostController {
         @PathVariable Long curriculumId,
         @RequestParam int page,
         @RequestParam String classification,
-        @RequestParam String sort,
         @RequestParam(required = false) String subject,
-        @RequestParam(required = false) String stack,
+        @RequestParam(required = false) String techStack,
         @RequestParam(required = false) String status,
         @RequestParam(required = false) String search
     ) {
-        List<AllPostResponseDto> postResponseDto = postService.findAllPostsByCurriculum(curriculumId,
-            page, classification, sort, subject, stack, status, search);
+        List<AllPostResponseDto> allPostResponseDto = postService.findAllPostsByCurriculum(curriculumId,
+            page, classification, subject, techStack, status, search);
 
-        long totalCount = postService.countAllPostsByCurriculum(curriculumId, classification,
-            subject, stack, status, search);
-
+        long totalCount = allPostResponseDto.size();
         return ResponseEntity.ok(
             ApiResponseDto.builder()
                 .ok(true)
-                .data(Map.of("message", "포스트 목록 조회 성공",
-                    "posts", postResponseDto,
-                    "totalCount", totalCount))
+                .data(Map.of(
+                    "message", "포스트 목록 조회 성공",
+                    "posts", allPostResponseDto,
+                    "totalCount", totalCount
+                ))
                 .build()
         );
     }
