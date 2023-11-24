@@ -25,56 +25,43 @@ public class CommentService {
     @Transactional
     public CommentResponseDto createComment(Long postId, CommentRequestDto request, String accountId) {
         Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "postId 가 없습니다."));
 
         Member member = memberRepository.findByAccountId(accountId)
             .orElseThrow(
                 () -> new CommentException(ErrorCode.NOT_FOUND_MEMBER,"멤버 ID를 찾을 수 없습니다: " + accountId));
 
-        Comment comment = getComment(request, member, post);
+        Comment parentComment = null;
+        if (request.getParentCommentId() != null) {
+            parentComment = commentRepository.findById(request.getParentCommentId())
+                .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "parentCommentId 가 없습니다."));
+
+            if (parentComment.getParentComment() != null) {
+                throw new CommentException(ErrorCode.NESTED_REPLY_EXCEPTION, "대댓글의 댓글은 허용되지 않습니다.");
+            }
+        }
+
+        Comment comment = Comment.createComment(request.getContent(), member, post, parentComment);
         comment = commentRepository.save(comment);
-        comment.updateCommentGroup();
-        return commentResponseDto(comment);
+        return CommentResponseDto.of(comment);
     }
 
     // READ
     public List<CommentResponseDto> getAllComments(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream().map(CommentResponseDto::of).toList();
+        return comments.stream()
+            .filter(comment -> !comment.isReply())
+            .map(CommentResponseDto::of)
+            .toList();
     }
 
     // DELETE
     @Transactional
     public void deleteComment(Long postId, Long commentId) {
         postRepository.findById(postId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "postId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "postId 가 없습니다."));
         commentRepository.findById(commentId)
-            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUNT, "commentId 가 없습니다."));
+            .orElseThrow(() -> new CommentException(ErrorCode.ID_NOT_FOUND, "commentId 가 없습니다."));
         commentRepository.deleteById(commentId);
     }
-
-    private Comment getComment(CommentRequestDto request, Member member, Post post) {
-        Comment comment;
-        if (request.hasParentComment()) {
-            Comment parentComment = commentRepository.findById((long) request.getParentCommentId())
-                .orElseThrow(() -> new CommentException(ErrorCode.NOT_FOUND_COMMENT, "부모 댓글 ID를 찾을 수 없습니다: " + request.getParentCommentId()));
-            comment = Comment.replyToComment(request.getContent(), member, post, parentComment);
-        } else {
-            comment = Comment.createComment(request.getContent(), member, post);
-        }
-        return comment;
-    }
-
-    private CommentResponseDto commentResponseDto(Comment comment) {
-        if (comment == null) {
-            return null;
-        }
-        return CommentResponseDto.of(comment);
-    }
 }
-
-
-
-
-
-

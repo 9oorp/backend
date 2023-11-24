@@ -10,9 +10,5 @@ import lombok.NoArgsConstructor;
 public class CommentRequestDto {
 
     private String content;
-    private int parentCommentId;  // 0이면 댓글, 0이 아니면 대댓글
-
-    public boolean hasParentComment() {
-        return parentCommentId > 0;
-    }
+    private Long parentCommentId;  // null이면 댓글, null이 아니면 대댓글
 }

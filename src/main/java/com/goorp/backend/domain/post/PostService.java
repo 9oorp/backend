@@ -1,5 +1,6 @@
 package com.goorp.backend.domain.post;
 
+import com.goorp.backend.api.exception.EntityNotFoundException;
 import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.model.PostRequestDto;
@@ -10,17 +11,19 @@ import com.goorp.backend.api.exception.PostException;
 import com.goorp.backend.domain.curriculum.CurriculumRepository;
 import com.goorp.backend.domain.member.MemberRepository;
 import java.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostService {
 
@@ -28,22 +31,11 @@ public class PostService {
     private final CurriculumRepository curriculumRepository;
     private final MemberRepository memberRepository;
 
-    @Autowired
-    public PostService(PostRepository postRepository, CurriculumRepository curriculumRepository,
-        MemberRepository memberRepository) {
-        this.postRepository = postRepository;
-        this.curriculumRepository = curriculumRepository;
-        this.memberRepository = memberRepository;
-    }
-
     // CREATE
     @Transactional
     public PostResponseDto createPost(PostRequestDto requestDto) {
-        Curriculum curriculum = curriculumRepository.findById(requestDto.getCurriculumId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " curriculum 이 없습니다."));
-
-        Member member = memberRepository.findByAccountId(requestDto.getAccountId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, " memberId 가 없습니다."));
+        Curriculum curriculum = findCurriculum(requestDto.getCurriculumId());
+        Member member = findMember(requestDto.getAccountId());
 
         Post post = requestDto.toEntity().toBuilder()
             .curriculum(curriculum)
@@ -56,8 +48,7 @@ public class PostService {
 
     // READ
     public PostResponseDto findPostById(Long postId) {
-        Post post = postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
+        Post post = findPost(postId);
         return PostResponseDto.of(post);
     }
 
@@ -80,14 +71,9 @@ public class PostService {
     // UPDATE
     @Transactional
     public PostResponseDto updatePost(Long postId, PostRequestDto requestDTO) {
-        Post existingPost = postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
-
-        Curriculum curriculum = curriculumRepository.findById(requestDTO.getCurriculumId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "curriculumId 가 없습니다."));
-
-        Member member = memberRepository.findByAccountId(requestDTO.getAccountId())
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, "memberId 가 없습니다."));
+        Post existingPost = findPost(postId);
+        Curriculum curriculum = findCurriculum(requestDTO.getCurriculumId());
+        Member member = findMember(requestDTO.getAccountId());
 
         Post updatedPost = existingPost.toBuilder()
             .title(requestDTO.getTitle())
@@ -110,8 +96,7 @@ public class PostService {
     // DELETE
     @Transactional
     public void deletePost(Long postId) {
-        postRepository.findById(postId)
-            .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUNT, postId + " 가 없습니다."));
+        findPost(postId);
         postRepository.deleteById(postId);
     }
 }

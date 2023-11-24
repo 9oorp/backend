@@ -1,5 +1,8 @@
 package com.goorp.backend.domain.member;
 
+import com.goorp.backend.api.exception.EntityNotFoundException;
+import com.goorp.backend.domain.member.exception.ConfirmPasswordNotMatchException;
+import com.goorp.backend.domain.member.exception.InvalidPasswordException;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.domain.member.model.MemberJoinDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
@@ -43,8 +46,7 @@ public class MemberService {
             });
         // password 확인
         if (!dto.getPassword().equals(dto.getPasswordConfirm())) {
-            throw new MemberException(ErrorCode.PASSWORD_NOT_SAME,
-                "passwordConfirm이 password와 다릅니다!");
+            throw new ConfirmPasswordNotMatchException();
         }
         dto.setEncodingPassword(encoder.encode(dto.getPassword()));
 
@@ -53,11 +55,10 @@ public class MemberService {
 
     public Map<String, String> login(String accountId, String password) {
         // memberId 없음
-        Member findMember = memberRepository.findByAccountId(accountId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, "ID가 틀립니다."));
+        Member findMember = findMember(accountId);
         // password 틀림
         if (!encoder.matches(password, findMember.getPassword())) {
-            throw new MemberException(ErrorCode.INVALID_PASSWORD, "비밀번호가 틀립니다.");
+            throw new InvalidPasswordException();
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
         String accessToken =jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
@@ -70,8 +71,7 @@ public class MemberService {
     }
 
     public String refreshToAccessToken(Long memberId) {
-        Member findMember = memberRepository.findById(memberId)
-            .orElseThrow(() -> new MemberException(ErrorCode.ID_NOT_FOUNT, memberId + " 멤버가 존재하지 않습니다."));
+        Member findMember = findMember(memberId);
 
         return jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
     }
@@ -81,7 +81,7 @@ public class MemberService {
 
         // 멤버 검색
         if(!memberRepository.existsByAccountId(accountId)) {
-            throw new MemberException(ErrorCode.ID_NOT_FOUNT, accountId + " 가 존재하지 않습니다.");
+            throw new EntityNotFoundException(Member.class, accountId);
         }
 
         // 게시물 검색
@@ -92,5 +92,15 @@ public class MemberService {
         return findAllPost.stream()
             .map(PostResponseDto::of)
             .collect(Collectors.toList());
+    }
+
+    private Member findMember(Long id) {
+        return memberRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(Member.class, id));
+    }
+
+    private Member findMember(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new EntityNotFoundException(Member.class, accountId));
     }
 }
