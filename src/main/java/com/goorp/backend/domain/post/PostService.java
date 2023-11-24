@@ -16,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,5 +97,20 @@ public class PostService {
     public void deletePost(Long postId) {
         findPost(postId);
         postRepository.deleteById(postId);
+    }
+
+    private Post findPost(Long id) {
+        return postRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
+    }
+
+    private Member findMember(String accountId) {
+        return memberRepository.findByAccountId(accountId)
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, accountId + " 가 없습니다."));
+    }
+
+    private Curriculum findCurriculum(Long id) {
+        return curriculumRepository.findById(id)
+                .orElseThrow(() -> new PostException(ErrorCode.ID_NOT_FOUND, id + " 가 없습니다."));
     }
 }
