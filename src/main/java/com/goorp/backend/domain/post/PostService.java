@@ -1,24 +1,23 @@
 package com.goorp.backend.domain.post;
 
-import com.goorp.backend.api.exception.EntityNotFoundException;
-import com.goorp.backend.domain.curriculum.Curriculum;
-import com.goorp.backend.domain.member.Member;
-import com.goorp.backend.domain.post.model.PostRequestDto;
-import com.goorp.backend.domain.post.model.PostResponseDto;
-import com.goorp.backend.domain.post.model.AllPostResponseDto;
+import com.goorp.backend.api.exception.CommentException;
 import com.goorp.backend.api.exception.ErrorCode;
 import com.goorp.backend.api.exception.PostException;
+import com.goorp.backend.domain.curriculum.Curriculum;
 import com.goorp.backend.domain.curriculum.CurriculumRepository;
+import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.member.MemberRepository;
-import java.time.LocalDateTime;
+import com.goorp.backend.domain.post.model.AllPostResponseDto;
+import com.goorp.backend.domain.post.model.PostRequestDto;
+import com.goorp.backend.domain.post.model.PostResponseDto;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -69,34 +68,29 @@ public class PostService {
 
     // UPDATE
     @Transactional
-    public PostResponseDto updatePost(Long postId, PostRequestDto requestDTO) {
+    public PostResponseDto updatePost(Long postId, PostRequestDto requestDTO, Long memberId) {
         Post existingPost = findPost(postId);
         Curriculum curriculum = findCurriculum(requestDTO.getCurriculumId());
-        Member member = findMember(requestDTO.getAccountId());
+        findMember(requestDTO.getAccountId());
+        validatePostAuthor(memberId, existingPost);
+        existingPost.update(requestDTO, curriculum);
 
-        Post updatedPost = existingPost.toBuilder()
-            .title(requestDTO.getTitle())
-            .content(requestDTO.getContent())
-            .classification(requestDTO.getClassification())
-            .subjects(requestDTO.getSubject())
-            .stacks(requestDTO.getStack())
-            .recruitNum(requestDTO.getRecruitNum())
-            .contactUrl(requestDTO.getContactUrl())
-            .status(requestDTO.getStatus())
-            .curriculum(curriculum)
-            .member(member)
-            .updatedAt(LocalDateTime.now())
-            .build();
-
-        postRepository.save(updatedPost);
-        return PostResponseDto.of(updatedPost);
+        postRepository.save(existingPost);
+        return PostResponseDto.of(existingPost);
     }
 
     // DELETE
     @Transactional
-    public void deletePost(Long postId) {
-        findPost(postId);
+    public void deletePost(Long postId, Long memberId) {
+        Post findPost = findPost(postId);
+        validatePostAuthor(memberId, findPost);
         postRepository.deleteById(postId);
+    }
+
+    private static void validatePostAuthor(Long memberId, Post post) {
+        if (!post.validation(memberId)) {
+            throw new CommentException(ErrorCode.UNAUTHORIZED, "포스트 작성자가 아닙니다.");
+        }
     }
 
     private Post findPost(Long id) {

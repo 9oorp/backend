@@ -1,20 +1,24 @@
 package com.goorp.backend.domain.post;
 
-import java.time.LocalDateTime;
-
 import com.goorp.backend.common.enums.Classification;
 import com.goorp.backend.common.enums.Status;
-import com.goorp.backend.domain.curriculum.Curriculum;
-import com.goorp.backend.domain.comment.Comment;
-import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
-import javax.persistence.*;
+import com.goorp.backend.domain.comment.Comment;
+import com.goorp.backend.domain.curriculum.Curriculum;
+import com.goorp.backend.domain.member.Member;
+import com.goorp.backend.domain.post.model.PostRequestDto;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -28,7 +32,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.BatchSize;
-import java.util.Set;
 
 @Builder(toBuilder = true)
 @Getter
@@ -88,4 +91,21 @@ public class Post {
     @BatchSize(size = 100)
     @OneToMany(mappedBy = "post")
     private List<Comment> comments = new ArrayList<>();
+
+    public  boolean validation(Long memberId) {
+        return this.getMember().getId().equals(memberId);
+    }
+
+    public void update(PostRequestDto requestDTO, Curriculum curriculum) {
+        this.title = requestDTO.getTitle();
+        this.content = requestDTO.getContent();
+        this.classification = requestDTO.getClassification();
+        this.subjects = requestDTO.getSubject();
+        this.stacks = requestDTO.getStack();
+        this.recruitNum = requestDTO.getRecruitNum();
+        this.contactUrl = requestDTO.getContactUrl();
+        this.status = requestDTO.getStatus();
+        this.curriculum = curriculum;
+        this.updatedAt = LocalDateTime.now();
+    }
 }

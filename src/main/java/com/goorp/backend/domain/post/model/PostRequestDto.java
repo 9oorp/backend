@@ -2,16 +2,16 @@ package com.goorp.backend.domain.post.model;
 
 import com.goorp.backend.common.enums.Classification;
 import com.goorp.backend.common.enums.Status;
-import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.goorp.backend.domain.post.Post;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
