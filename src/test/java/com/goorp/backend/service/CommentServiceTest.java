@@ -2,6 +2,8 @@ package com.goorp.backend.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.goorp.backend.common.enums.Classification;
+import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.domain.member.Member;
 import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.domain.comment.model.CommentRequestDto;
@@ -20,10 +22,10 @@ class CommentServiceTest extends BaseIntegratedTest {
         Post post = Post.builder()
             .title("testTitle")
             .content("testContent")
-            .classification("testClassification")
+            .classification(Classification.STUDY)
             .recruitNum(2)
             .contactUrl("testContactUrl")
-            .status("1")
+            .status(Status.RECRUITING)
             .createdAt(now)
             .updatedAt(now)
             .build();

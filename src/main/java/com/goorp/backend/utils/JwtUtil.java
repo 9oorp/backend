@@ -24,6 +24,38 @@ public class JwtUtil {
     private String key;
     private final AesBytesEncryptor aesBytesEncryptor;
 
+    private final Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
+    private final Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
+
+    public String createAccessToken(Member member) {
+        Claims claims = Jwts.claims();
+        claims.put("memberId",memberIdEncoder(member.getId()));
+        claims.put("accountId", member.getAccountId());
+        claims.put("memberName", member.getName());
+        claims.put("role", RoleType.USER.toString());
+        claims.put("type", "access");
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + accessExpireTimeMs))
+            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
+    public String createRefreshToken(Member member) {
+        Claims claims = Jwts.claims();
+        claims.put("memberId", memberIdEncoder(member.getId()));
+        claims.put("type", "refresh");
+
+        return Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(new Date(System.currentTimeMillis()))
+            .setExpiration(new Date(System.currentTimeMillis() + refreshExpireTimeMs))
+            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+            .compact();
+    }
+
     // Base64 인코딩된 문자열을 SecretKey 객체로 변환하는 메서드
     public SecretKey getSecretKey() {
         byte[] decodedKey = Base64.getDecoder().decode(key);
@@ -50,7 +82,6 @@ public class JwtUtil {
     public String getType(String token) {
         return getClaims(token).get("type", String.class);
     }
-
     public String getRole(String token) {
         return getClaims(token).get("role", String.class);
     }
@@ -63,34 +94,6 @@ public class JwtUtil {
             .getBody();
     }
 
-    public String createAccessToken(Member member, long expireTimeMs) {
-        Claims claims = Jwts.claims();
-        claims.put("memberId",memberIdEncoder(member.getId()));
-        claims.put("accountId", member.getAccountId());
-        claims.put("memberName", member.getName());
-        claims.put("role", RoleType.USER.toString());
-        claims.put("type", "access");
-
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
-            .compact();
-    }
-
-    public String createRefreshToken(Member member, long expireTimeMs) {
-        Claims claims = Jwts.claims();
-        claims.put("memberId", memberIdEncoder(member.getId()));
-        claims.put("type", "refresh");
-
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
-            .signWith(getSecretKey(), SignatureAlgorithm.HS256)
-            .compact();
-    }
 
     private String memberIdEncoder(Long memberId) {
         byte[] encrypt = aesBytesEncryptor.encrypt(memberId.toString().getBytes());
