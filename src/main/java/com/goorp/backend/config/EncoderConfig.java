@@ -12,6 +12,9 @@ public class EncoderConfig {
     @Value("${jwt.secret}")
     private String secret;
 
+    @Value("${jwt.char-sequence}")
+    private String charSequence;
+
     @Bean
     public BCryptPasswordEncoder encoder() {
         return new BCryptPasswordEncoder();
@@ -19,6 +22,6 @@ public class EncoderConfig {
 
     @Bean
     public AesBytesEncryptor aesBytesEncryptor() {
-        return new AesBytesEncryptor(secret, "8435893458963425");
+        return new AesBytesEncryptor(secret, charSequence);
     }
 }
