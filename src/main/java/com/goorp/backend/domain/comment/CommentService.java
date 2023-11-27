@@ -53,6 +53,7 @@ public class CommentService {
     }
 
     // UPDATE
+    @Transactional
     public CommentResponseDto updateComment(Long commentId, CommentUpdateDto commentUpdateDto, Long memberId) {
         // 검증하고 댓글 내용 업데이트
         Comment comment = findCommentByCommentId(commentId);

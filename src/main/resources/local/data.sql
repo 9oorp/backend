@@ -630,3 +630,18 @@ insert into comment (content, created_at, updated_at, post_id, member_id, PARENT
 values ('댓글입니다.', '2023-08-07T10:30:15', '2023-08-07T10:30:15', 1,1, null),
        ('대댓글입니다.', '2023-08-07T10:31:00', '2023-08-07T10:31:00', 1,1, 1),
        ('댓글입니다.', '2023-08-07T10:31:20', '2023-08-07T10:31:20', 1,1, null);
+
+UPDATE POST
+SET STATUS = CASE
+                 WHEN STATUS = 0 THEN 'RECRUITING'
+                 WHEN STATUS = 1 THEN 'COMPLETED'
+                 WHEN STATUS = 2 THEN 'DELETED'
+                 ELSE STATUS
+    END;
+
+UPDATE POST
+SET CLASSIFICATION = CASE
+                         WHEN CLASSIFICATION = 0 THEN 'STUDY'
+                         WHEN CLASSIFICATION = 1 THEN 'PROJECT'
+                         ELSE CLASSIFICATION
+    END;
