@@ -1,16 +1,15 @@
 package com.goorp.backend.domain.post.model;
 
-import java.time.LocalDateTime;
-
 import com.goorp.backend.common.enums.Classification;
 import com.goorp.backend.common.enums.Status;
-import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
+import com.goorp.backend.domain.post.Post;
+import java.time.LocalDateTime;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor

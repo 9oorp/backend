@@ -1,24 +1,24 @@
 package com.goorp.backend.domain.post;
 
 
-import java.util.List;
-import java.util.Optional;
-import lombok.RequiredArgsConstructor;
+import static com.goorp.backend.domain.curriculum.QCurriculum.curriculum;
+import static com.goorp.backend.domain.member.QMember.member;
+import static com.goorp.backend.domain.post.QPost.post;
+
 import com.goorp.backend.common.enums.Classification;
 import com.goorp.backend.common.enums.Status;
 import com.goorp.backend.common.enums.Subject;
 import com.goorp.backend.common.enums.TechStack;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.util.List;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.jpa.impl.JPAQueryFactory;
-
-import static com.goorp.backend.domain.curriculum.QCurriculum.curriculum;
-import static com.goorp.backend.domain.member.QMember.member;
-import static com.goorp.backend.domain.post.QPost.*;
 
 @Repository
 @RequiredArgsConstructor

@@ -39,7 +39,7 @@ public class FreePassToken {
     @Disabled
     @DisplayName("프리패스 에세스 토큰 생성하는 테스트입니다.")
     void createFreePassByAccessToken() {
-        String freePassToken = jwtUtil.createAccessToken(member, MaxExpireTimeMs);
+        String freePassToken = jwtUtil.createAccessToken(member);
         log.info("accessFreePassToken = {}", freePassToken);
     }
 
@@ -47,7 +47,7 @@ public class FreePassToken {
     @Disabled
     @DisplayName("프리패스 리프레쉬 토큰 생성하는 테스트입니다.")
     void createFreePassTokenByRefreshToken() {
-        String refreshFreePassToken = jwtUtil.createRefreshToken(member, MaxExpireTimeMs);
+        String refreshFreePassToken = jwtUtil.createRefreshToken(member);
         log.info("refreshFreePassToken = {}", refreshFreePassToken);
     }
 }

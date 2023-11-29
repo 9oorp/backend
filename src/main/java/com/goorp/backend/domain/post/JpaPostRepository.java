@@ -1,6 +1,5 @@
 package com.goorp.backend.domain.post;
 
-import com.goorp.backend.domain.post.Post;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

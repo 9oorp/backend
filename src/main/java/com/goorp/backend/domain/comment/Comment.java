@@ -1,5 +1,8 @@
 package com.goorp.backend.domain.comment;
 
+import com.goorp.backend.domain.member.Member;
+import com.goorp.backend.domain.post.Post;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,9 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.time.LocalDateTime;
-import com.goorp.backend.domain.member.Member;
-import com.goorp.backend.domain.post.Post;
 import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -65,5 +65,14 @@ public class Comment {
     }
     public boolean isReply() {
         return this.parentComment != null;
+    }
+
+    public void updateComment(String content) {
+        this.content = content;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public  boolean validation(Long memberId) {
+        return this.getMember().getId().equals(memberId);
     }
 }

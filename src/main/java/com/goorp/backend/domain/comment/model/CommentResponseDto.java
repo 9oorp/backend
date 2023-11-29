@@ -18,8 +18,8 @@ public class CommentResponseDto {
     private String content;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long memberId;
     private String accountId;
+    private String name;
     private List<CommentResponseDto> replies;
 
     public static CommentResponseDto of(Comment comment) {
@@ -34,7 +34,7 @@ public class CommentResponseDto {
             comment.getContent(),
             comment.getCreatedAt(),
             comment.getUpdatedAt(),
-            comment.getMember().getId(),
+            comment.getMember().getAccountId(),
             comment.getMember().getName(),
             replies
         );

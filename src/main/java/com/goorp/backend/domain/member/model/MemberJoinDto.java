@@ -19,7 +19,7 @@ public class MemberJoinDto {
     @Size(min = 5, max = 20, message = "{Size.memberName}")
     private String memberName;
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d).+$", message = "{Pattern.password}")  // 영어, 숫자 포함
-    @Size(min = 10, max = 30, message = "{Size.password}")
+    @Size(min = 5, max = 30, message = "{Size.password}")
     private String password;
     @NotBlank(message = "{NotBlank.passwordConfirm}")
     private String passwordConfirm;

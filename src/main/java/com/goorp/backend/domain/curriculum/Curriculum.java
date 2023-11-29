@@ -1,5 +1,6 @@
 package com.goorp.backend.domain.curriculum;
 
+import com.goorp.backend.domain.post.Post;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import com.goorp.backend.domain.post.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

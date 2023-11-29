@@ -1,14 +1,14 @@
 package com.goorp.backend.domain.member;
 
 import com.goorp.backend.api.exception.EntityNotFoundException;
-import com.goorp.backend.domain.member.exception.ConfirmPasswordNotMatchException;
-import com.goorp.backend.domain.member.exception.InvalidPasswordException;
-import com.goorp.backend.domain.post.Post;
-import com.goorp.backend.domain.member.model.MemberJoinDto;
-import com.goorp.backend.domain.post.model.PostResponseDto;
 import com.goorp.backend.api.exception.ErrorCode;
 import com.goorp.backend.api.exception.MemberException;
+import com.goorp.backend.domain.member.exception.ConfirmPasswordNotMatchException;
+import com.goorp.backend.domain.member.exception.InvalidPasswordException;
+import com.goorp.backend.domain.member.model.MemberJoinDto;
+import com.goorp.backend.domain.post.Post;
 import com.goorp.backend.domain.post.PostRepository;
+import com.goorp.backend.domain.post.model.PostResponseDto;
 import com.goorp.backend.utils.JwtUtil;
 import java.util.HashMap;
 import java.util.List;
@@ -32,9 +32,6 @@ public class MemberService {
     private final BCryptPasswordEncoder encoder;
     private final JwtUtil jwtUtil;
     private final PostRepository postRepository;
-
-    private final Long accessExpireTimeMs = 60 * 60 * 1000L; // 2시간
-    private final Long refreshExpireTimeMs = 2 * 7 * 24 * 60 * 60 * 1000L;  // 2주
 
     @Transactional
     public void join(MemberJoinDto dto) {
@@ -61,8 +58,8 @@ public class MemberService {
             throw new InvalidPasswordException();
         }
         // 로그인 정상 동작 refresh, access 토큰 발급
-        String accessToken =jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
-        String refreshToken = jwtUtil.createRefreshToken(findMember, refreshExpireTimeMs);
+        String accessToken =jwtUtil.createAccessToken(findMember);
+        String refreshToken = jwtUtil.createRefreshToken(findMember);
 
         Map<String, String> tokens = new HashMap<>();
         tokens.put("accessToken", accessToken);
@@ -73,7 +70,7 @@ public class MemberService {
     public String refreshToAccessToken(Long memberId) {
         Member findMember = findMember(memberId);
 
-        return jwtUtil.createAccessToken(findMember, accessExpireTimeMs);
+        return jwtUtil.createAccessToken(findMember);
     }
 
     public List<PostResponseDto> getMemberPosts(String accountId) {

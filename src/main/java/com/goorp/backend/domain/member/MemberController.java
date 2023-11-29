@@ -4,8 +4,6 @@ import com.goorp.backend.api.response.ApiResponseDto;
 import com.goorp.backend.domain.member.model.MemberJoinDto;
 import com.goorp.backend.domain.member.model.MemberLoginDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
-import com.goorp.backend.domain.post.PostRepository;
-
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
-    private final PostRepository postRepository;
 
     @PostMapping("/join")
     public ApiResponseDto join(@Validated @RequestBody MemberJoinDto dto) {

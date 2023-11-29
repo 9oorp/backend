@@ -61,7 +61,7 @@ public class BaseIntegratedTest {
 
     protected String getUserToken(Long id) {
         Member member = memberRepository.findById(id).orElseThrow();
-        String accessToken = jwtUtil.createAccessToken(member, 1000*60*10);
+        String accessToken = jwtUtil.createAccessToken(member);
         return "Bearer " + accessToken;
     }
 

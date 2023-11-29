@@ -1,6 +1,7 @@
 package com.goorp.backend.domain.post;
 
 import com.goorp.backend.api.response.ApiResponseDto;
+import com.goorp.backend.common.login.MemberDetails;
 import com.goorp.backend.domain.post.model.AllPostResponseDto;
 import com.goorp.backend.domain.post.model.PostRequestDto;
 import com.goorp.backend.domain.post.model.PostResponseDto;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -78,9 +80,12 @@ public class PostController {
 
     // UPDATE
     @PutMapping("/posts/{postId}")
-    public ApiResponseDto updatePost(@PathVariable Long postId,
-        @RequestBody PostRequestDto requestDTO) {
-        PostResponseDto postResponseDTO = postService.updatePost(postId, requestDTO);
+    public ApiResponseDto updatePost(
+        @PathVariable Long postId,
+        @RequestBody PostRequestDto requestDTO,
+        @AuthenticationPrincipal MemberDetails memberDetails
+    ) {
+        PostResponseDto postResponseDTO = postService.updatePost(postId, requestDTO, memberDetails.getMemberId());
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "post 업데이트 성공", "post", postResponseDTO))
@@ -89,8 +94,11 @@ public class PostController {
 
     // DELETE
     @DeleteMapping("/posts/{postId}")
-    public ApiResponseDto deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
+    public ApiResponseDto deletePost(
+        @PathVariable Long postId,
+        @AuthenticationPrincipal MemberDetails memberDetails
+    ) {
+        postService.deletePost(postId, memberDetails.getMemberId());
         return ApiResponseDto.builder()
             .ok(true)
             .data(Map.of("message", "post 삭제 성공"))
