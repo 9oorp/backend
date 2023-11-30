@@ -58,8 +58,6 @@ public class SecurityConfig {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedOrigin("https://www.9oorp.store");
         corsConfiguration.addAllowedOrigin("https://9oorp.store");
-        corsConfiguration.addAllowedOrigin("http://9oorp.store");
-        corsConfiguration.addAllowedOrigin("http://43.202.116.84:9000");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.setAllowCredentials(true);

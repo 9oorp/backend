@@ -8,7 +8,7 @@ public class BackendApplication {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(BackendApplication.class);
-        app.setAdditionalProfiles("local");
+        app.setAdditionalProfiles("prod");
         app.run(args);
     }
 }
